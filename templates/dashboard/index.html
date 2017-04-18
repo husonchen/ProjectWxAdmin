@@ -70,21 +70,25 @@
                     </li>
 
                     <li class="tpl-left-nav-item">
-                        <a href="javascript:;" class="nav-link tpl-left-nav-link-list" id="translateNavGroup">
+                        <a href="javascript:;" class="nav-link tpl-left-nav-link-list" id="refundNavGroup">
                             <i class="am-icon-table"></i>
                             <span>返现审核</span>
                             <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>
                         </a>
                         <ul class="tpl-left-nav-sub-menu" >
                             <li>
-                                <a onclick="refundTask()" id="translateTaskNav">
+                                <a onclick="refundTask()" id="refundTaskNav">
                                     <i class="am-icon-angle-right" ></i>
                                     <span>未完成</span>
                                 </a>
 
-                                <a onclick="refundFinished()" id="translateFinishedNav">
+                                <a onclick="refundPass()" id="refundPassNav">
                                     <i class="am-icon-angle-right"></i>
-                                    <span>已完成</span>
+                                    <span>审核通过</span>
+                                </a>
+                                <a onclick="refundReject()" id="refundRefuseNav">
+                                    <i class="am-icon-angle-right"></i>
+                                    <span>审核不通过</span>
                                 </a>
 
                             </li>
@@ -173,10 +177,10 @@ function refundTask() {
         });
 }
 
-function refundFinished() {
+function refundPass() {
     $.ajax({
             type: "get",
-            url:"/refund_task/finished",
+            url:"/refund_task/passed",
             data:{},
             async: false,
             error: function(request) {
@@ -185,7 +189,25 @@ function refundFinished() {
             success: function(data) {
                 $("#mainContent").html(data);
                 $(".active").removeClass("active");
-                $("#refundFinishedNav").addClass("active");
+                $("#refundPassNav").addClass("active");
+                $("#refundNavGroup").addClass("active");
+            }
+        });
+}
+
+function refundReject() {
+    $.ajax({
+            type: "get",
+            url:"/refund_task/reject",
+            data:{},
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                $("#mainContent").html(data);
+                $(".active").removeClass("active");
+                $("#refundRefuseNav").addClass("active");
                 $("#refundNavGroup").addClass("active");
             }
         });
@@ -194,7 +216,7 @@ function refundFinished() {
 function luckeyMoney() {
     $.ajax({
             type: "get",
-            url:"/setting/user_info",
+            url:"/setting/lucky_money",
             data:{},
             async: false,
             error: function(request) {

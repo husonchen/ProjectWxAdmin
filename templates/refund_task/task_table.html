@@ -1,0 +1,57 @@
+{% for upload in uploads %}
+                                        <tr id="tr_{{ upload.id }}">
+                                            <td >{{ upload.order_id }}</td>
+                                            <td >
+                                                {% if upload.image1_id != '' %}
+                                                <img class="smallImage" src="/assets/wx_temp/{{ upload.image1_id }}.jpg" height="60">
+                                                {% endif %}
+                                            </td>
+                                            <td >
+                                                {% if upload.image2_id != '' %}
+                                                <img class="smallImage" src="/assets/wx_temp/{{ upload.image2_id }}.jpg" height="60">
+                                                {% endif %}
+                                            </td>
+                                            <td >
+                                                {% if upload.image3_id != '' %}
+                                                <img class="smallImage" src="/assets/wx_temp/{{ upload.image3_id }}.jpg" height="60">
+                                                {% endif %}
+                                            </td>
+                                            <td class="am-hide-sm-only">{{ upload.update_time }}</td>
+                                            <td>
+                                                <div class="am-btn-toolbar">
+                                                    <div class="am-btn-group am-btn-group-xs">
+                                                        <button onclick="submitVerify({{ upload.id }},1)" class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 通过</button>
+                                                        <button onclick="submitVerify({{ upload.id }},0)" class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-trash"></span> 不通过</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+
+<script>
+
+    $(".smallImage").click(function () {
+        console.log("click image");
+        $("#modelImage").attr('src',$(this).attr('src'));
+        $("#doc-modal-1").modal().show();
+    });
+
+    function submitVerify(id,passFlag) {
+        $(this).attr('disabled','true');
+        $.ajax({
+            type: "get",
+            url:"/refund_task/submit/",
+            data:{"id":id,"passFlag":passFlag},
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+                $(this).removeAttr('disabled');
+            },
+            success: function(data) {
+                if(data == "true"){
+                    $("#tr_"+id).remove();
+                }
+            }
+        });
+    };
+</script>
