@@ -15,14 +15,15 @@ Including another URLconf
 """
 
 from django.conf.urls import *
-
 from shop_admin.util.UrlDiscovery import Site
+from django.conf.urls.static import static
+from django.conf import settings
 
 site = Site()
 site.autodiscover()
 
 urlpatterns = [
     url(r'^', include(site.urls)),
-]
+] #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
