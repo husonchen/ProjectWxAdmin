@@ -4,5 +4,4 @@ from django.conf import settings
 
 def getTpl(context,template):
     t = loader.get_template(template+'.html')
-    c = Context(context)
-    return HttpResponse(t.render(c))
+    return HttpResponse(t.render(context))
