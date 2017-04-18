@@ -1,0 +1,18 @@
+{% for upload in uploads %}
+                                        <tr id="tr_{{ upload.id }}">
+                                            <td >{{ upload.order_id }}</td>
+                                            <td >{{ upload.money }}</td>
+                                            <td>
+                                            {% if upload.refund_flag %}
+                                            已发
+                                            {% else %}
+                                            未发
+                                            {% endif %}
+                                            </td>
+                                            <td class="am-hide-sm-only">{{ upload.update_time }}</td>
+                                        </tr>
+                                        {% endfor %}
+
+<script>
+
+</script>

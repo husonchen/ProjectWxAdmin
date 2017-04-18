@@ -48,8 +48,39 @@ class RefundTaskController(ActionController):
             v.save()
             return HttpResponse("true")
 
-    def finished(self,request):
+    def passed(self,request):
         user = request.session['user']
-        messages = UserUpload.objects.filter(translator_id=user.translator_id,del_flag=False).order_by('message_id')[0:10]
 
-        return getTpl({'messages':messages},'refund_task/finished')
+        shopId = user.shop_id
+        uploads = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False).order_by('id')[0:10]
+        num = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False).count()
+        pageNum = math.ceil(float(num) / 10)
+        return getTpl({'uploads': uploads, 'pageNum': pageNum}, 'refund_task/passed')
+
+    def passed_table(self,request):
+        page = int(request.GET['page'])
+        user = request.session['user']
+        shopId = user.shop_id
+        uploads = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False).order_by('id')[(page - 1) * 10:page * 10]
+
+        return getTpl({'uploads': uploads}, 'refund_task/passed_table')
+
+    def reject(self,request):
+        user = request.session['user']
+
+        shopId = user.shop_id
+        uploads = UserUpload.objects.filter(shop_id=shopId, del_flag=False, verify_flag=2).order_by('id')[
+                  0:10]
+        num = UserUpload.objects.filter(shop_id=shopId, del_flag=False, verify_flag=2).count()
+        pageNum = math.ceil(float(num) / 10)
+        return getTpl({'uploads': uploads, 'pageNum': pageNum}, 'refund_task/reject')
+
+    def reject_table(self,request):
+        user = request.session['user']
+
+        shopId = user.shop_id
+        uploads = UserUpload.objects.filter(shop_id=shopId, del_flag=False, verify_flag=2).order_by('id')[
+                  0:10]
+        num = UserUpload.objects.filter(shop_id=shopId, del_flag=False, verify_flag=2).count()
+        pageNum = math.ceil(float(num) / 10)
+        return getTpl({'uploads': uploads, 'pageNum': pageNum}, 'refund_task/reject_table')

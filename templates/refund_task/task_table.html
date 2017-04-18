@@ -8,12 +8,14 @@
                                             </td>
                                             <td >
                                                 {% if upload.image2_id != '' %}
-                                                <img class="smallImage" src="/assets/wx_temp/{{ upload.image2_id }}.jpg" height="60"></td>
+                                                <img class="smallImage" src="/assets/wx_temp/{{ upload.image2_id }}.jpg" height="60">
                                                 {% endif %}
+                                            </td>
                                             <td >
                                                 {% if upload.image3_id != '' %}
-                                                <img class="smallImage" src="/assets/wx_temp/{{ upload.image3_id }}.jpg" height="60"></td>
+                                                <img class="smallImage" src="/assets/wx_temp/{{ upload.image3_id }}.jpg" height="60">
                                                 {% endif %}
+                                            </td>
                                             <td class="am-hide-sm-only">{{ upload.update_time }}</td>
                                             <td>
                                                 <div class="am-btn-toolbar">
@@ -35,6 +37,7 @@
     });
 
     function submitVerify(id,passFlag) {
+        $(this).attr('disabled','true');
         $.ajax({
             type: "get",
             url:"/refund_task/submit/",
@@ -42,6 +45,7 @@
             async: false,
             error: function(request) {
                 alert("Connection error");
+                $(this).removeAttr('disabled');
             },
             success: function(data) {
                 if(data == "true"){
