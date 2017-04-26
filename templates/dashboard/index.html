@@ -13,143 +13,234 @@
     <link rel="icon" type="image/png" href="/assets/i/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="/assets/i/app-icon72x72@2x.png">
     <meta name="apple-mobile-web-app-title" content="Amaze UI" />
-    <link rel="stylesheet" href="/assets/css/amazeui.min.css" />
-    <link rel="stylesheet" href="/assets/css/admin.css">
-    <link rel="stylesheet" href="/assets/css/app.css">
     <script src="/assets/js/echarts.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="/assets/css/amazeui.datatables.min.css" />
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="/assets/js/jquery.min.js"></script>
 </head>
 
-<body data-type="index">
+<body>
+<script src="/assets/js/theme.js"></script>
+<div class="am-g tpl-g">
+        <!-- 头部 -->
+        <header>
+            <!-- logo -->
+            <div class="am-fl tpl-header-logo">
+                <a href="javascript:;"><img src="/assets/img/logo.png" alt=""></a>
+            </div>
+            <!-- 右侧内容 -->
+            <div class="tpl-header-fluid">
+                <!-- 侧边切换 -->
+                <div class="am-fl tpl-header-switch-button am-icon-list">
+                    <span>
+
+                </span>
+                </div>
+
+                <!-- 其它功能-->
+                <div class="am-fr tpl-header-navbar">
+                    <ul>
+                        <!-- 欢迎语 -->
+                        <li class="am-text-sm tpl-header-navbar-welcome">
+                            <a href="javascript:;">欢迎你, <span>{{ userName }}</span> </a>
+                        </li>
 
 
-    <header class="am-topbar am-topbar-inverse admin-header">
-        <div class="am-topbar-brand">
-            <a href="javascript:;" class="tpl-logo">
-                <img src="/assets/img/logo.png" alt="">
-            </a>
+                        <!-- 退出 -->
+                        <li class="am-text-sm">
+                            <a href="javascript:;">
+                                <span class="am-icon-sign-out"></span> 退出
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </header>
+        <!-- 风格切换 -->
+        <div class="tpl-skiner">
+            <div class="tpl-skiner-toggle am-icon-cog">
+            </div>
+            <div class="tpl-skiner-content">
+                <div class="tpl-skiner-content-title">
+                    选择主题
+                </div>
+                <div class="tpl-skiner-content-bar">
+                    <span class="skiner-color skiner-white" data-color="theme-white"></span>
+                    <span class="skiner-color skiner-black" data-color="theme-black"></span>
+                </div>
+            </div>
         </div>
-        <div class="am-icon-list tpl-header-nav-hover-ico am-fl am-margin-right">
+    <!-- 侧边导航栏 -->
+        <div class="left-sidebar">
 
-        </div>
-
-        <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
-
-        <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
-
-            <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
-
-                <li class="am-dropdown" data-am-dropdown data-am-dropdown-toggle>
-                    <a class="am-dropdown-toggle tpl-header-list-link" href="javascript:;">
-                        <span class="tpl-header-list-user-nick">{{ userName }}</span><span class="tpl-header-list-user-ico"></span>
+            <!-- 菜单 -->
+            <ul class="sidebar-nav">
+                <li class="sidebar-nav-heading"> <span class="sidebar-nav-heading-info"> </span></li>
+                <li class="sidebar-nav-link">
+                    <a href="index.html" class="active">
+                        <i class="am-icon-home sidebar-nav-link-logo"></i> 首页
                     </a>
-                    <ul class="am-dropdown-content">
-                        <li><a href="#"><span class="am-icon-cog"></span> 设置</a></li>
-                        <li><a href="#"><span class="am-icon-power-off"></span> 退出</a></li>
+                </li>
+               <li class="sidebar-nav-link">
+                    <a href="javascript:;" class="sidebar-nav-sub-title" >
+                        <i class="am-icon-table sidebar-nav-link-logo"></i> 返现审核
+                        <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
+                    </a>
+                    <ul class="sidebar-nav sidebar-nav-sub">
+                        <li class="sidebar-nav-link" >
+                            <a href="javascript:;" id="refundTaskBtn">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 未完成
+                            </a>
+                        </li>
+
+                        <li class="sidebar-nav-link">
+                            <a href="javascript:;" id="refundPassBtn">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 审核通过
+                            </a>
+                        </li>
+                        <li class="sidebar-nav-link">
+                            <a href="javascript:;" id="refundRefuseBtn">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 审核不通过
+                            </a>
+                        </li>
                     </ul>
                 </li>
-                <li><a href="###" class="tpl-header-list-link"><span class="am-icon-sign-out tpl-header-list-ico-out-size"></span></a></li>
+                <li class="sidebar-nav-link">
+                    <a href="javascript:;" class="sidebar-nav-sub-title">
+                        <i class="am-icon-table sidebar-nav-link-logo"></i> 我的钱包
+                        <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
+                    </a>
+                    <ul class="sidebar-nav sidebar-nav-sub">
+                        <li class="sidebar-nav-link">
+                            <a href="table-list.html" id="accountIndexBtn">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 余额
+                            </a>
+                        </li>
+
+                        <li class="sidebar-nav-link" id="accountChargeBtn">
+                            <a href="table-list-img.html">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 充值
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sidebar-nav-link">
+                    <a href="javascript:;" class="sidebar-nav-sub-title">
+                        <i class="am-icon-table sidebar-nav-link-logo"></i> 设置
+                        <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
+                    </a>
+                    <ul class="sidebar-nav sidebar-nav-sub">
+                        <li class="sidebar-nav-link">
+                            <a href="table-list.html" id="moneyAmountBtn">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 红包金额
+                            </a>
+                        </li>
+
+                        <li class="sidebar-nav-link">
+                            <a href="table-list-img.html" id="changePasswordBtn">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 更改密码
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
             </ul>
         </div>
-    </header>
 
+{##}
+{#    <div class="tpl-page-container tpl-page-header-fixed">#}
+{##}
+{##}
+{#        <div class="tpl-left-nav tpl-left-nav-hover">#}
+{#            <div class="tpl-left-nav-title">#}
+{#                功能列表#}
+{#            </div>#}
+{#            <div class="tpl-left-nav-list">#}
+{#                <ul class="tpl-left-nav-menu">#}
+{#                    <li class="tpl-left-nav-item">#}
+{#                        <a href="/dashboard" class="nav-link active" id="indexNav">#}
+{#                            <i class="am-icon-home"></i>#}
+{#                            <span>首页</span>#}
+{#                        </a>#}
+{#                    </li>#}
+{##}
+{#                    <li class="tpl-left-nav-item">#}
+{#                        <a href="javascript:;" class="nav-link tpl-left-nav-link-list" id="refundNavGroup">#}
+{#                            <i class="am-icon-table"></i>#}
+{#                            <span>返现审核</span>#}
+{#                            <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>#}
+{#                        </a>#}
+{#                        <ul class="tpl-left-nav-sub-menu" >#}
+{#                            <li>#}
+{#                                <a onclick="refundTask()" id="refundTaskNav">#}
+{#                                    <i class="am-icon-angle-right" ></i>#}
+{#                                    <span>未完成</span>#}
+{#                                </a>#}
+{##}
+{#                                <a onclick="refundPass()" id="refundPassNav">#}
+{#                                    <i class="am-icon-angle-right"></i>#}
+{#                                    <span>审核通过</span>#}
+{#                                </a>#}
+{#                                <a onclick="refundReject()" id="refundRefuseNav">#}
+{#                                    <i class="am-icon-angle-right"></i>#}
+{#                                    <span>审核不通过</span>#}
+{#                                </a>#}
+{##}
+{#                            </li>#}
+{#                        </ul>#}
+{#                    </li>#}
+{##}
+{##}
+{#                    <li class="tpl-left-nav-item">#}
+{#                        <a href="javascript:;" class="nav-link tpl-left-nav-link-list" id="settingNavGroup">#}
+{#                            <i class="am-icon-table"></i>#}
+{#                            <span>设置</span>#}
+{#                            <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>#}
+{#                        </a>#}
+{#                        <ul class="tpl-left-nav-sub-menu" >#}
+{#                            <li>#}
+{#                                <a onclick="luckeyMoney()" id="userInfoNav">#}
+{#                                    <i class="am-icon-angle-right" ></i>#}
+{#                                    <span>红包金额</span>#}
+{#                                </a>#}
+{##}
+{#                                <a onclick="password()" id="transMoneyNav">#}
+{#                                    <i class="am-icon-angle-right"></i>#}
+{#                                    <span>更改密码</span>#}
+{#                                </a>#}
+{#                            </li>#}
+{#                        </ul>#}
+{#                    </li>#}
+{##}
+{#                    <li class="tpl-left-nav-item">#}
+{#                        <a href="javascript:;" class="nav-link tpl-left-nav-link-list" id="myAccountNavGroup">#}
+{#                            <i class="am-icon-table"></i>#}
+{#                            <span>我的钱包</span>#}
+{#                            <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>#}
+{#                        </a>#}
+{#                        <ul class="tpl-left-nav-sub-menu" >#}
+{#                            <li>#}
+{#                                <a onclick="myAccount()" id="myAccountNav">#}
+{#                                    <i class="am-icon-angle-right" ></i>#}
+{#                                    <span>余额</span>#}
+{#                                </a>#}
+{#                                <a onclick="chargeMoney()" id="chargeMoneyNav">#}
+{#                                    <i class="am-icon-angle-right" ></i>#}
+{#                                    <span>充值</span>#}
+{#                                </a>#}
+{#                            </li>#}
+{#                        </ul>#}
+{#                    </li>#}
+{#                </ul>#}
+{#            </div>#}
+{#        </div>#}
 
-    <div class="tpl-page-container tpl-page-header-fixed">
-
-
-        <div class="tpl-left-nav tpl-left-nav-hover">
-            <div class="tpl-left-nav-title">
-                功能列表
-            </div>
-            <div class="tpl-left-nav-list">
-                <ul class="tpl-left-nav-menu">
-                    <li class="tpl-left-nav-item">
-                        <a href="index.html" class="nav-link active" id="indexNav">
-                            <i class="am-icon-home"></i>
-                            <span>首页</span>
-                        </a>
-                    </li>
-
-                    <li class="tpl-left-nav-item">
-                        <a href="javascript:;" class="nav-link tpl-left-nav-link-list" id="refundNavGroup">
-                            <i class="am-icon-table"></i>
-                            <span>返现审核</span>
-                            <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>
-                        </a>
-                        <ul class="tpl-left-nav-sub-menu" >
-                            <li>
-                                <a onclick="refundTask()" id="refundTaskNav">
-                                    <i class="am-icon-angle-right" ></i>
-                                    <span>未完成</span>
-                                </a>
-
-                                <a onclick="refundPass()" id="refundPassNav">
-                                    <i class="am-icon-angle-right"></i>
-                                    <span>审核通过</span>
-                                </a>
-                                <a onclick="refundReject()" id="refundRefuseNav">
-                                    <i class="am-icon-angle-right"></i>
-                                    <span>审核不通过</span>
-                                </a>
-
-                            </li>
-                        </ul>
-                    </li>
-
-
-                    <li class="tpl-left-nav-item">
-                        <a href="javascript:;" class="nav-link tpl-left-nav-link-list" id="settingNavGroup">
-                            <i class="am-icon-table"></i>
-                            <span>设置</span>
-                            <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>
-                        </a>
-                        <ul class="tpl-left-nav-sub-menu" >
-                            <li>
-                                <a onclick="luckeyMoney()" id="userInfoNav">
-                                    <i class="am-icon-angle-right" ></i>
-                                    <span>红包金额</span>
-                                </a>
-
-                                <a onclick="password()" id="transMoneyNav">
-                                    <i class="am-icon-angle-right"></i>
-                                    <span>更改密码</span>
-                                </a>
-
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="tpl-left-nav-item">
-                        <a href="javascript:;" class="nav-link tpl-left-nav-link-list" id="mailNavGroup">
-                            <i class="am-icon-table"></i>
-                            <span>我的消息</span>
-                            <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>
-                        </a>
-                        <ul class="tpl-left-nav-sub-menu" >
-                            <li>
-                                <a onclick="mailInbox()" id="mailInboxNav">
-                                    <i class="am-icon-angle-right" ></i>
-                                    <span>站内信</span>
-                                </a>
-
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-
-
-
-
-        <div class="tpl-content-wrapper" id="mainContent">
-
-
-        </div>
 
     </div>
-
-
+</div>
+</div>
     <script src="/assets/js/jquery.min.js"></script>
     <script src="/assets/js/amazeui.min.js"></script>
     <script src="/assets/js/iscroll.js"></script>
@@ -158,9 +249,11 @@
 
 </html>
 
-<script type="text/javascript">
-function refundTask() {
-    $.ajax({
+<script>
+$(document).ready(function () {
+    console.log('load');
+    $("#refundTaskBtn").click(function () {
+        $.ajax({
             type: "get",
             url:"/refund_task/task",
             data:{},
@@ -169,16 +262,13 @@ function refundTask() {
                 alert("Connection error");
             },
             success: function(data) {
-                $("#mainContent").html(data);
                 $(".active").removeClass("active");
-                $("#refundTaskNav").addClass("active");
-                $("#refundNavGroup").addClass("active");
+                $("#refundTaskBtn").addClass("active");
             }
         });
-}
-
-function refundPass() {
-    $.ajax({
+    });
+    $("#refundPassBtn").click(function () {
+        $.ajax({
             type: "get",
             url:"/refund_task/passed",
             data:{},
@@ -187,16 +277,13 @@ function refundPass() {
                 alert("Connection error");
             },
             success: function(data) {
-                $("#mainContent").html(data);
                 $(".active").removeClass("active");
-                $("#refundPassNav").addClass("active");
-                $("#refundNavGroup").addClass("active");
+                $("#refundPassBtn").addClass("active");
             }
         });
-}
-
-function refundReject() {
-    $.ajax({
+    });
+    $("#refundRefuseBtn").click(function () {
+        $.ajax({
             type: "get",
             url:"/refund_task/reject",
             data:{},
@@ -205,16 +292,13 @@ function refundReject() {
                 alert("Connection error");
             },
             success: function(data) {
-                $("#mainContent").html(data);
                 $(".active").removeClass("active");
-                $("#refundRefuseNav").addClass("active");
-                $("#refundNavGroup").addClass("active");
+                $("#refundRefuseBtn").addClass("active");
             }
         });
-}
-
-function luckeyMoney() {
-    $.ajax({
+    });
+    $("#moneyAmountBtn").click(function () {
+        $.ajax({
             type: "get",
             url:"/setting/lucky_money",
             data:{},
@@ -223,16 +307,13 @@ function luckeyMoney() {
                 alert("Connection error");
             },
             success: function(data) {
-                $("#mainContent").html(data);
                 $(".active").removeClass("active");
-                $("#userInfoNav").addClass("active");
-                $("#settingNavGroup").addClass("active");
+                $("#moneyAmountBtn").addClass("active");
             }
         });
-}
-
-function password() {
-    $.ajax({
+    });
+    $("#changePasswordBtn").click(function () {
+        $.ajax({
             type: "get",
             url:"/setting/trans_money",
             data:{},
@@ -241,15 +322,28 @@ function password() {
                 alert("Connection error");
             },
             success: function(data) {
-                $("#mainContent").html(data);
                 $(".active").removeClass("active");
-                $("#transMoneyNav").addClass("active");
-                $("#settingNavGroup").addClass("active");
+                $("#changePasswordBtn").addClass("active");
             }
         });
-}
-function mailInbox() {
-    $.ajax({
+    });
+    $("#accountIndexBtn").click(function () {
+        $.ajax({
+            type: "get",
+            url:"/account/",
+            data:{},
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                $(".active").removeClass("active");
+                $("#accountIndexBtn").addClass("active");
+            }
+        });
+    });
+    $("#accountChargeBtn").click(function () {
+        $.ajax({
             type: "get",
             url:"/mail/inbox",
             data:{},
@@ -258,13 +352,12 @@ function mailInbox() {
                 alert("Connection error");
             },
             success: function(data) {
-                $("#mainContent").html(data);
                 $(".active").removeClass("active");
-                $("#mailInboxNav").addClass("active");
-                $("#mailNavGroup").addClass("active");
+                $("#accountChargeBtn").addClass("active");
             }
         });
-}
+    });
+})
 
 
 </script>

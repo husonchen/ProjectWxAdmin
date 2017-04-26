@@ -16,7 +16,7 @@
                                                 <img class="smallImage" src="/assets/wx_temp/{{ upload.image3_id }}.jpg" height="60">
                                                 {% endif %}
                                             </td>
-                                            <td class="am-hide-sm-only">{{ upload.update_time }}</td>
+                                            <td class="am-hide-sm-only">{{ upload.update_time |date:"Y-m-d H:i:s"}}</td>
                                             <td>
                                                 <div class="am-btn-toolbar">
                                                     <div class="am-btn-group am-btn-group-xs">

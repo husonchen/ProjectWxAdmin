@@ -9,7 +9,7 @@
                                             未发
                                             {% endif %}
                                             </td>
-                                            <td class="am-hide-sm-only">{{ upload.update_time }}</td>
+                                            <td class="am-hide-sm-only">{{ upload.update_time |date:"Y-m-d H:i:s"}}</td>
                                         </tr>
                                         {% endfor %}
 
