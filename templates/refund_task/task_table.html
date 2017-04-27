@@ -1,39 +1,41 @@
 {% for upload in uploads %}
-                                        <tr id="tr_{{ upload.id }}">
-                                            <td >{{ upload.order_id }}</td>
+                                        <tr id="tr_{{ upload.id }}" class="gradeX">
+                                            <td class="am-text-middle">{{ upload.order_id }}</td>
                                             <td >
                                                 {% if upload.image1_id != '' %}
-                                                <img class="smallImage" src="/assets/wx_temp/{{ upload.image1_id }}.jpg" height="60">
+                                                <img class="tpl-table-line-img" src="/assets/wx_temp/{{ upload.image1_id }}.jpg" height="60">
                                                 {% endif %}
                                             </td>
                                             <td >
                                                 {% if upload.image2_id != '' %}
-                                                <img class="smallImage" src="/assets/wx_temp/{{ upload.image2_id }}.jpg" height="60">
+                                                <img class="tpl-table-line-img" src="/assets/wx_temp/{{ upload.image2_id }}.jpg" height="60">
                                                 {% endif %}
                                             </td>
                                             <td >
                                                 {% if upload.image3_id != '' %}
-                                                <img class="smallImage" src="/assets/wx_temp/{{ upload.image3_id }}.jpg" height="60">
+                                                <img class="tpl-table-line-img" src="/assets/wx_temp/{{ upload.image3_id }}.jpg" height="60">
                                                 {% endif %}
                                             </td>
-                                            <td class="am-hide-sm-only">{{ upload.update_time }}</td>
-                                            <td>
-                                                <div class="am-btn-toolbar">
-                                                    <div class="am-btn-group am-btn-group-xs">
-                                                        <button onclick="submitVerify({{ upload.id }},1)" class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 通过</button>
-                                                        <button onclick="submitVerify({{ upload.id }},0)" class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-trash"></span> 不通过</button>
+                                            <td class="am-text-middle">{{ upload.update_time |date:"Y-m-d H:i:s"}}</td>
+                                            <td class="am-text-middle">
+                                                    <div class="tpl-table-black-operation">
+                                                        <a href="javascript:;" onclick="submitVerify({{ upload.id }},1)">
+                                                            <i class="am-icon-pencil"></i> 通过
+                                                        </a>
+                                                        <a href="javascript:;"  onclick="submitVerify({{ upload.id }},0)" class="tpl-table-black-operation-del">
+                                                            <i class="am-icon-trash"></i> 不通过
+                                                        </a>
                                                     </div>
-                                                </div>
-                                            </td>
+                                                </td>
                                         </tr>
                                         {% endfor %}
 
 <script>
 
-    $(".smallImage").click(function () {
+    $(".tpl-table-line-img").click(function () {
         console.log("click image");
         $("#modelImage").attr('src',$(this).attr('src'));
-        $("#doc-modal-1").modal().show();
+        $('#doc-modal-1').appendTo("body").modal().show();
     });
 
     function submitVerify(id,passFlag) {

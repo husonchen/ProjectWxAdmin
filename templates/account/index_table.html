@@ -1,0 +1,10 @@
+{% for history in historys %}
+                                        <tr id="tr_{{ history.id }}"  class="gradeX">
+                                            <td class="am-text-middle">{{ history.amount }}</td>
+                                            <td class="am-text-middle">{{ history.create_time |date:"Y-m-d H:i:s" }}</td>
+                                        </tr>
+                                        {% endfor %}
+
+<script>
+
+</script>

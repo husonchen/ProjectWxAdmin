@@ -1,15 +1,15 @@
 {% for upload in uploads %}
-                                        <tr id="tr_{{ upload.id }}">
-                                            <td >{{ upload.order_id }}</td>
-                                            <td >{{ upload.money }}</td>
-                                            <td>
+                                        <tr id="tr_{{ upload.id }}" class="gradeX">
+                                            <td class="am-text-middle">{{ upload.order_id }}</td>
+                                            <td class="am-text-middle">{{ upload.money }}</td>
+                                            <td class="am-text-middle">
                                             {% if upload.refund_flag %}
                                             已发
                                             {% else %}
                                             未发
                                             {% endif %}
-                                            </td>
-                                            <td class="am-hide-sm-only">{{ upload.update_time }}</td>
+                                            </td >
+                                            <td class="am-text-middle">{{ upload.update_time |date:"Y-m-d H:i:s"}}</td>
                                         </tr>
                                         {% endfor %}
 
