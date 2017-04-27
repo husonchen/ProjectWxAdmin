@@ -56,7 +56,7 @@
         }else{
             var f = parseFloat(m);
             if(f <= 0){
-                $("#my-alert").modal().show();
+                $("#my-alert").appendTo("body").modal().show();
                 return;
             }
         }
