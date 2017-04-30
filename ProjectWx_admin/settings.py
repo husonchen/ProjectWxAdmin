@@ -81,7 +81,7 @@ DATABASES = {
         'NAME' : 'xiaob',
         'USER' : 'xiaob',
         'PASSWORD' : 'skdfjkasdf',
-        'HOST' : 'localhost',
+        'HOST' : '10.11.199.67',
         'PORT' : '3306',
         'default-character-set' : 'utf8',
     }
