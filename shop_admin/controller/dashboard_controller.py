@@ -4,6 +4,7 @@ from shop_admin.util.TplHelper import *
 from django.http import  HttpResponseRedirect
 from django.shortcuts import render
 from shop_admin.model.order_ids import OrderIds
+from shop_admin.model.shop_setting import ShopSetting
 
 class DashboardController(ActionController):
 
@@ -18,8 +19,12 @@ class DashboardController(ActionController):
         except :
             last_time = ''
             num = 0
-
-        c = {"userName":user.shop_name,'last_time':last_time,'last_num':num}
+        try:
+            shopSetting = ShopSetting.objects.filter(shop_id=user.shop_id)[0]
+        except IndexError:
+            shopSetting = ShopSetting(shop_id=user.shop_id,update_time=None)
+            shopSetting.save()
+        c = {"userName":user.shop_name,'last_time':last_time,'last_num':num,'shop_setting':shopSetting}
         # return getTpl(c,'dashboard/index')
         return render(request, 'dashboard/index.html', c)
 
@@ -39,3 +44,19 @@ class DashboardController(ActionController):
             OrderIds().batchInsert(id_list,user.shop_id)
             return 'OK'
         return 'Not Ok'
+
+    def change_flag(self,request):
+        flag = request.GET['flag']
+        value = request.GET['value']
+        if value == 'True':
+            value = True
+        else:
+            value = False
+        user = request.session['user']
+        shopSetting = ShopSetting.objects.get(shop_id=user.shop_id)
+        if flag == 'filter_orderid':
+            shopSetting.filter_orderid_flag=value
+        elif flag == 'auto_pass':
+            shopSetting.auto_pass_flag = value
+        shopSetting.save()
+        return 'True'

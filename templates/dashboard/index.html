@@ -208,7 +208,7 @@
                                         <label for="user-intro" class="am-u-sm-3 am-form-label">过滤订单号</label>
                                         <div class="am-u-sm-9">
                                             <div class="tpl-switch">
-                                                <input type="checkbox" class="ios-switch bigswitch tpl-switch-btn" checked="">
+                                                <input id="filter_orderid_checkbox" type="checkbox" class="ios-switch bigswitch tpl-switch-btn" checked="" flag="{{ shop_setting.filter_orderid_flag }}">
                                                 <div class="tpl-switch-btn-view">
                                                     <div>
                                                     </div>
@@ -225,7 +225,7 @@
                                         <label for="user-intro" class="am-u-sm-3 am-form-label">默认审核通过</label>
                                         <div class="am-u-sm-9">
                                             <div class="tpl-switch">
-                                                <input type="checkbox" class="ios-switch bigswitch tpl-switch-btn" checked="">
+                                                <input id="auto_pass_checkbox" type="checkbox" class="ios-switch bigswitch tpl-switch-btn" checked="" flag="{{ shop_setting.auto_pass_flag}}">
                                                 <div class="tpl-switch-btn-view">
                                                     <div>
                                                     </div>
@@ -254,6 +254,22 @@
 <script>
 $(document).ready(function () {
     console.log('load');
+    if($("#filter_orderid_checkbox").attr("flag") == "False"){
+        $("#filter_orderid_checkbox").removeAttr("checked");
+    }else{
+        $("#filter_orderid_checkbox").attr("checked", "true");
+    };
+    if($("#auto_pass_checkbox").attr("flag") == "False"){
+        $("#auto_pass_checkbox").removeAttr("checked");
+    }else{
+        $("#auto_pass_checkbox").attr("checked", "true");
+    };
+    $("#filter_orderid_checkbox").click(function () {
+        updateFlag("filter_orderid");
+    });
+    $("#auto_pass_checkbox").click(function () {
+        updateFlag("auto_pass");
+    });
     $("#refundTaskBtn").click(function () {
         $.ajax({
             type: "get",
@@ -371,5 +387,30 @@ $(document).ready(function () {
     });
 
 })
+function updateFlag(flag) {
+    var ele ;
+    if(flag == 'filter_orderid'){
+        ele = $("#filter_orderid_checkbox");
+    }else if(flag =='auto_pass'){
+        ele = $("#auto_pass_checkbox") ;
+    }
+    if(ele.attr("flag") == "False"){
+        ele.attr("flag","True");
+    }else{
+        ele.attr("flag","False");
+    }
+    console.log(ele.attr("flag"));
+    $.ajax({
+            type: "get",
+            url:"/dashboard/change_flag",
+            data:{"flag":flag,"value":ele.attr("flag")},
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+            }
+        });
+}
 
 </script>
