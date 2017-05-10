@@ -61,7 +61,7 @@ class RefundTaskController(ActionController):
         page = int(request.GET['page'])
         user = request.session['user']
         shopId = user.shop_id
-        uploads = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False).order_by('id')[(page - 1) * 10:page * 10]
+        uploads = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False).order_by('-id')[(page - 1) * 10:page * 10]
 
         return getTpl({'uploads': uploads}, 'refund_task/passed_table')
 
