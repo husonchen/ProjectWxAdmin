@@ -11,7 +11,7 @@
                             <form class="am-form tpl-form-line-form">
                                 <div class="am-form-group">
                                     <label for="user-name" class="am-u-sm-3 am-form-label">当前金额</label>
-                                    <label for="user-name" class=" ">  {{ current_big }} 元 </label>
+                                    <label for="user-name" class=" ">  {{ current_big }} 分 </label>
                                 </div>
 
                                 <div class="am-form-group">
@@ -37,7 +37,7 @@
   <div class="am-modal-dialog">
     <div class="am-modal-hd">提示</div>
     <div id="hints" class="am-modal-bd">
-      请输入大于0的整数或小数
+      请输入大于100的整数
     </div>
     <div class="am-modal-footer">
       <span class="am-modal-btn">确定</span>
@@ -51,10 +51,10 @@
         var f = 0;
         if(isNaN(m)){
             //不是数字
-            $("#my-alert").modal().show();
+            $("#my-alert").appendTo("body").modal().show();
             return;
         }else{
-            var f = parseFloat(m);
+            var f = parseInt(m);
             if(f <= 0){
                 $("#my-alert").appendTo("body").modal().show();
                 return;

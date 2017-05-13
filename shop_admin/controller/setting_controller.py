@@ -1,6 +1,7 @@
 from django_url_framework.controller import ActionController
 from shop_admin.model.log_change_money import LogShopMoney
 from shop_admin.util.TplHelper import *
+from shop_admin.model.shop_user import *
 
 class SettingController(ActionController):
     def lucky_money(self,request):
@@ -15,7 +16,7 @@ class SettingController(ActionController):
     def change_money(self,request):
         user = request.session['user']
         try:
-            money = float(request.GET['money'])
+            money = int(request.GET['money'])
         except:
             return 'false'
         if money <= 0:
@@ -23,3 +24,17 @@ class SettingController(ActionController):
         log = LogShopMoney(shop_id=user.shop_id,money=money)
         log.save()
         return 'true'
+
+    def user_info(self,request):
+        return getTpl({},'setting/user_info')
+
+    def change_pass(self,request):
+        user = request.session['user']
+        ori_pass = request.GET['ori_pass']
+        new_pass = request.GET['new_pass']
+        shopUser = ShopUser.objects.filter(id=user.id).all()[0]
+        if shopUser.password != ori_pass:
+            return HttpResponse('false')
+        else :
+            ShopUser.objects.filter(id=user.id).update(password=new_pass)
+            return HttpResponse("true")

@@ -16,3 +16,5 @@ class AccountController(ActionController):
         pageNum = math.ceil(float(num) / 10)
         return getTpl({'account':account,'historys': historys, 'pageNum': pageNum}, 'account/index')
 
+    def charge_money(self,request):
+        return getTpl({},'account/add_money')

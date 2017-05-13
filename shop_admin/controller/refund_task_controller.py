@@ -3,6 +3,8 @@ from shop_admin.util.TplHelper import *
 from shop_admin.model.user_upload import UserUpload
 from shop_admin.model.verify_refund import VerifyRefund
 from shop_admin.model.log_change_money import LogShopMoney
+from shop_admin.model.shop_account import ShopAccount
+from django.db.models import F
 import math
 
 class RefundTaskController(ActionController):
@@ -35,6 +37,12 @@ class RefundTaskController(ActionController):
             verify_flag = 2
             accept_flag = 1
 
+        #check money
+        logMoney = LogShopMoney.objects.filter(shop_id=user.shop_id).order_by('-id')[0]
+        effectRows = ShopAccount.objects.filter(shop_id=user.shop_id,balance__gte=logMoney.money,del_flag=False).\
+            update(balance=F('balance') - logMoney.money)
+        if effectRows == 0:
+            return HttpResponse("no_money")
         effectRows = UserUpload.objects.filter(id=id,shop_id=user.shop_id,verify_flag=0).\
                 update(verify_flag=verify_flag,accept_flag=accept_flag)
 
@@ -42,7 +50,6 @@ class RefundTaskController(ActionController):
             return HttpResponse("false")
         else:
             upload = UserUpload.objects.filter(id=id)[0]
-            logMoney = LogShopMoney.objects.filter(shop_id=user.shop_id).order_by('-id')[0]
             v = VerifyRefund(shop_id=user.shop_id,open_id=upload.open_id,order_id=upload.order_id,
                          money=logMoney.money,update_time=None,create_time=None)
             v.save()

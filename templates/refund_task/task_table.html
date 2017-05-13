@@ -52,6 +52,9 @@
             success: function(data) {
                 if(data == "true"){
                     $("#tr_"+id).remove();
+                }else if(data == "no_money"){
+                    $("#hints").text('余额不足，请先充值');
+                    $("#my-alert").appendTo("body").modal().show();
                 }
             }
         });

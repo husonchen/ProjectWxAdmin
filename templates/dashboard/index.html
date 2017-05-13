@@ -337,7 +337,7 @@ $(document).ready(function () {
     $("#changePasswordBtn").click(function () {
         $.ajax({
             type: "get",
-            url:"/setting/trans_money",
+            url:"/setting/user_info",
             data:{},
             async: false,
             error: function(request) {
@@ -369,7 +369,7 @@ $(document).ready(function () {
     $("#accountChargeBtn").click(function () {
         $.ajax({
             type: "get",
-            url:"/mail/inbox",
+            url:"/account/charge_money",
             data:{},
             async: false,
             error: function(request) {
