@@ -1,11 +1,14 @@
 from django_url_framework.controller import ActionController
+from django.shortcuts import render
 from shop_admin.util.TplHelper import *
 from shop_admin.model.user_upload import UserUpload
 from shop_admin.model.verify_refund import VerifyRefund
 from shop_admin.model.log_change_money import LogShopMoney
 from shop_admin.model.shop_account import ShopAccount
 from django.db.models import F
+import json
 import math
+# from django.db import connection
 
 class RefundTaskController(ActionController):
 
@@ -15,7 +18,7 @@ class RefundTaskController(ActionController):
         uploads = UserUpload.objects.filter(shop_id=shopId,del_flag=False,verify_flag=0).order_by('id')[0:10]
         num = UserUpload.objects.filter(shop_id=shopId,del_flag=False,verify_flag=0).count()
         pageNum = math.ceil(float(num)/10)
-        return getTpl({'uploads':uploads,'pageNum':pageNum},'refund_task/task')
+        return render(request, 'refund_task/task.html', {'uploads':uploads,'pageNum':pageNum})
 
 
     def task_table(self,request):
@@ -24,7 +27,7 @@ class RefundTaskController(ActionController):
         shopId = user.shop_id
         uploads = UserUpload.objects.filter(shop_id=shopId,del_flag=False,verify_flag=0).order_by('id')[(page-1)*10:page*10]
 
-        return getTpl({'uploads':uploads},'refund_task/task_table')
+        return render(request, 'refund_task/task_table.html', {'uploads':uploads})
 
     def submit(self,request):
         user = request.session['user']
@@ -37,23 +40,64 @@ class RefundTaskController(ActionController):
             verify_flag = 2
             accept_flag = 1
 
-        #check money
-        logMoney = LogShopMoney.objects.filter(shop_id=user.shop_id).order_by('-id')[0]
-        effectRows = ShopAccount.objects.filter(shop_id=user.shop_id,balance__gte=logMoney.money,del_flag=False).\
-            update(balance=F('balance') - logMoney.money)
-        if effectRows == 0:
-            return HttpResponse("no_money")
-        effectRows = UserUpload.objects.filter(id=id,shop_id=user.shop_id,verify_flag=0).\
-                update(verify_flag=verify_flag,accept_flag=accept_flag)
-
-        if effectRows == 0:
-            return HttpResponse("false")
-        else:
+        # if pass, check money
+        if verify_flag == 1:
+            #check money
+            logMoney = LogShopMoney.objects.filter(shop_id=user.shop_id).order_by('-id')[0]
+            effectRows = ShopAccount.objects.filter(shop_id=user.shop_id,balance__gte=logMoney.money,del_flag=False).\
+                update(balance=F('balance') - logMoney.money)
+            effectRows = UserUpload.objects.filter(id=id, shop_id=user.shop_id, verify_flag=0). \
+                update(verify_flag=verify_flag, accept_flag=accept_flag)
+            if effectRows == 0:
+                return HttpResponse("no_money")
             upload = UserUpload.objects.filter(id=id)[0]
-            v = VerifyRefund(shop_id=user.shop_id,open_id=upload.open_id,order_id=upload.order_id,
-                         money=logMoney.money,update_time=None,create_time=None)
+            v = VerifyRefund(shop_id=user.shop_id, open_id=upload.open_id, order_id=upload.order_id,
+                             money=logMoney.money, update_time=None, create_time=None)
             v.save()
-            return HttpResponse("true")
+        else:
+            effectRows = UserUpload.objects.filter(id=id,shop_id=user.shop_id,verify_flag=0).\
+                    update(verify_flag=verify_flag,accept_flag=accept_flag)
+            if effectRows == 0:
+                return HttpResponse("false")
+        return HttpResponse("true")
+
+    def submit_batch(self,request):
+        user = request.session['user']
+        ids = json.loads(request.POST['ids'])
+        passFlag = request.POST['passFlag']
+        if passFlag == '1':
+            verify_flag = 1
+            accept_flag = 0
+        else:
+            verify_flag = 2
+            accept_flag = 1
+        id_num = len(ids)
+        if verify_flag == 1:
+            #check money
+            logMoney = LogShopMoney.objects.filter(shop_id=user.shop_id).order_by('-id')[0]
+            effectRows = ShopAccount.objects.filter(shop_id=user.shop_id,balance__gte=id_num * logMoney.money,del_flag=False).\
+                update(balance=F('balance') - id_num * logMoney.money)
+            if effectRows == 0:
+                return HttpResponse("no_money")
+            effectRows = UserUpload.objects.filter(id__in=ids,shop_id=user.shop_id,verify_flag=0).\
+                    update(verify_flag=verify_flag,accept_flag=accept_flag)
+            # print connection.queries
+            if effectRows == 0:
+                return HttpResponse("false")
+            uploads = UserUpload.objects.filter(id__in=ids).all()
+            vrs = []
+            for upload in uploads:
+                v = VerifyRefund(shop_id=user.shop_id, open_id=upload.open_id, order_id=upload.order_id,
+                                 money=logMoney.money, update_time=None, create_time=None)
+                vrs.append(v)
+            VerifyRefund.objects.bulk_create(vrs)
+        else:
+            effectRows = UserUpload.objects.filter(id__in=ids, shop_id=user.shop_id, verify_flag=0). \
+                update(verify_flag=verify_flag, accept_flag=accept_flag)
+            # print connection.queries
+            if effectRows == 0:
+                return HttpResponse("false")
+        return HttpResponse("true")
 
     def passed(self,request):
         user = request.session['user']

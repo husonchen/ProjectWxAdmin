@@ -1,5 +1,6 @@
 {% for upload in uploads %}
                                         <tr id="tr_{{ upload.id }}" class="gradeX">
+                                            <td ><input type="checkbox" class="uploadCheckbox" val={{ upload.id }}></td>
                                             <td class="am-text-middle">{{ upload.order_id }}</td>
                                             <td >
                                                 {% if upload.image1_id != '' %}
@@ -55,6 +56,42 @@
                 }else if(data == "no_money"){
                     $("#hints").text('余额不足，请先充值');
                     $("#my-alert").appendTo("body").modal().show();
+                }
+            }
+        });
+    };
+
+    $("#allCheckbox").click(function () {
+        console.log($("#allCheckbox").get(0).checked);
+        if($("#allCheckbox").get(0).checked) {
+            $(".uploadCheckbox").prop('checked', true);
+        }else{
+            $(".uploadCheckbox").removeAttr('checked');
+        }
+    });
+
+    function batchSubmitVerify(passFlag,csrf_token) {
+        var passIds = [];
+       $('.uploadCheckbox').each(function() {
+           if ($(this).get(0).checked) {
+               var val = $(this).attr('val');
+               passIds.push(val);
+           }
+       });
+       $.ajax({
+            type: "post",
+            url:"/refund_task/submit_batch/",
+            data:{"ids":JSON.stringify(passIds),"passFlag":passFlag,"csrfmiddlewaretoken":$.cookie('csrftoken')},
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                if(data == "no_money"){
+                    $("#hints").text('余额不足，请先充值');
+                    $("#my-alert").appendTo("body").modal().show();
+                }else {
+                    $("#refundTaskBtn").click();
                 }
             }
         });

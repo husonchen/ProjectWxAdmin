@@ -13,6 +13,7 @@
                                     <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
                                     <thead>
                                         <tr>
+                                            <th><input type="checkbox" id="allCheckbox" >全选</th>
                                             <th >订单号</th>
                                             <th >图片</th>
                                             <th >图片</th>
@@ -24,7 +25,9 @@
                                     <tbody id="tableBody">
                                         {% include 'refund_task/task_table.html' %}
                                     </tbody>
+
                                 </table>
+
                                 <div class="am-u-lg-12 am-cf">
 
                                     <div class="am-fr">
@@ -49,7 +52,8 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <hr>
+                                 <button id="passButton" class="am-btn am-btn-primary " onclick="batchSubmitVerify(1)">批量通过勾选</button>
+                                 <button id="passButton" class="am-btn am-btn-danger " onclick="batchSubmitVerify(0)">批量拒绝勾选</button>
 
                             </form>
                         </div>
@@ -74,7 +78,7 @@
   <div class="am-modal-dialog">
     <div class="am-modal-hd">提示</div>
     <div id="hints" class="am-modal-bd">
-      原密码错误
+
     </div>
     <div class="am-modal-footer">
       <span class="am-modal-btn">确定</span>
