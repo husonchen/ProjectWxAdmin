@@ -10,13 +10,13 @@ class SettingController(ActionController):
         if len(rows) == 0:
             current_big = 0
         else :
-            current_big = rows[0].money
+            current_big = float(rows[0].money) / 100
         return getTpl({'user': user,'current_big':current_big}, 'setting/lucky_money')
 
     def change_money(self,request):
         user = request.session['user']
         try:
-            money = int(request.GET['money'])
+            money = int(float(request.GET['money']) * 100)
         except:
             return 'false'
         if money <= 0:
