@@ -18,12 +18,14 @@ from django.conf.urls import *
 from shop_admin.util.UrlDiscovery import Site
 from django.conf.urls.static import static
 from django.conf import settings
+import shop_admin.controller.index
 
 site = Site()
 site.autodiscover()
 
 urlpatterns = [
     url(r'^', include(site.urls)),
+    url(r'/index',shop_admin.controller.index.hello),
 ] #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
