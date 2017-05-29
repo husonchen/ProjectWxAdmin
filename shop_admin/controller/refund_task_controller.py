@@ -9,13 +9,14 @@ from django.db.models import F
 import json
 import math
 # from django.db import connection
+pageSize = 50
 
 class RefundTaskController(ActionController):
 
     def task(self,request):
         user = request.session['user']
         shopId = user.shop_id
-        uploads = UserUpload.objects.filter(shop_id=shopId,del_flag=False,verify_flag=0).order_by('id')[0:10]
+        uploads = UserUpload.objects.filter(shop_id=shopId,del_flag=False,verify_flag=0).order_by('id')[0:pageSize]
         num = UserUpload.objects.filter(shop_id=shopId,del_flag=False,verify_flag=0).count()
         pageNum = math.ceil(float(num)/10)
         return render(request, 'refund_task/task.html', {'uploads':uploads,'pageNum':pageNum})
@@ -25,7 +26,7 @@ class RefundTaskController(ActionController):
         page = int(request.GET['page'])
         user = request.session['user']
         shopId = user.shop_id
-        uploads = UserUpload.objects.filter(shop_id=shopId,del_flag=False,verify_flag=0).order_by('id')[(page-1)*10:page*10]
+        uploads = UserUpload.objects.filter(shop_id=shopId,del_flag=False,verify_flag=0).order_by('id')[(page-1)*pageSize:page*pageSize]
 
         return render(request, 'refund_task/task_table.html', {'uploads':uploads})
 
@@ -103,7 +104,7 @@ class RefundTaskController(ActionController):
         user = request.session['user']
 
         shopId = user.shop_id
-        uploads = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False).order_by('id')[0:10]
+        uploads = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False).order_by('id')[0:pageSize]
         num = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False).count()
         pageNum = math.ceil(float(num) / 10)
         return getTpl({'uploads': uploads, 'pageNum': pageNum}, 'refund_task/passed')
@@ -112,7 +113,7 @@ class RefundTaskController(ActionController):
         page = int(request.GET['page'])
         user = request.session['user']
         shopId = user.shop_id
-        uploads = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False).order_by('-id')[(page - 1) * 10:page * 10]
+        uploads = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False).order_by('-id')[(page - 1) * pageSize:page * pageSize]
 
         return getTpl({'uploads': uploads}, 'refund_task/passed_table')
 
@@ -121,17 +122,17 @@ class RefundTaskController(ActionController):
 
         shopId = user.shop_id
         uploads = UserUpload.objects.filter(shop_id=shopId, del_flag=False, verify_flag=2).order_by('id')[
-                  0:10]
+                  0:pageSize]
         num = UserUpload.objects.filter(shop_id=shopId, del_flag=False, verify_flag=2).count()
         pageNum = math.ceil(float(num) / 10)
         return getTpl({'uploads': uploads, 'pageNum': pageNum}, 'refund_task/reject')
 
     def reject_table(self,request):
         user = request.session['user']
-
+        page = int(request.GET['page'])
         shopId = user.shop_id
         uploads = UserUpload.objects.filter(shop_id=shopId, del_flag=False, verify_flag=2).order_by('id')[
-                  0:10]
+                  (page - 1) * pageSize:page * pageSize]
         num = UserUpload.objects.filter(shop_id=shopId, del_flag=False, verify_flag=2).count()
         pageNum = math.ceil(float(num) / 10)
         return getTpl({'uploads': uploads, 'pageNum': pageNum}, 'refund_task/reject_table')
