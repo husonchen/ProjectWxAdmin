@@ -51,7 +51,7 @@ kill_cmd() {
     SIGNAL=""; MSG="Killing "
     while true
     do
-        LIST=`ps -ef | grep -v grep | grep $CMD | grep -w $USR | awk '{print $2}'`
+        LIST=`ps -ef | grep -v grep | grep '$CMD' | grep -w $USR | awk '{print $2}'`
         if [ "$LIST" ]
         then
             echo; echo "$MSG $LIST" ; echo
