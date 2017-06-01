@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 
 def hello(request):
-    return HttpResponse("Hello world")
+    return HttpResponseRedirect('/dashboard/')
