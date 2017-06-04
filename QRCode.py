@@ -35,12 +35,11 @@ class QRCode():
 
         xml_str = urlResp.read()
         json_str = json.loads(xml_str)
-        print json_str
         ticket = json_str["ticket"]
-        print ticket
 #        urlencode(ticket)
         QRcodeUrl = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=%s" %ticket
         urllib.urlretrieve(QRcodeUrl, "%s/%s.jpg" % (targetDir, scene_id))
+	print 'save image at %s/%s.jpg' % (targetDir, scene_id)
 
 
 scene_id = int(raw_input('scene_id: '))
