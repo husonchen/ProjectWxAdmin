@@ -125,6 +125,7 @@
                                 <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 充值
                             </a>
                         </li>
+
                     </ul>
                 </li>
                 <li class="sidebar-nav-link">
@@ -142,6 +143,13 @@
                         <li class="sidebar-nav-link">
                             <a href="javascript:;" id="changePasswordBtn">
                                 <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 更改密码
+                            </a>
+                        </li>
+
+
+                        <li class="sidebar-nav-link" id="myQRBtn">
+                            <a href="javascript:;">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 二维码
                             </a>
                         </li>
                     </ul>
@@ -379,6 +387,22 @@ $(document).ready(function () {
                 $("#mainContent").html(data);
                 $(".active").removeClass("active");
                 $("#accountChargeBtn").addClass("active");
+            }
+        });
+    });
+    $("#myQRBtn").click(function () {
+        $.ajax({
+            type: "get",
+            url:"/account/qrcode",
+            data:{},
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                $("#mainContent").html(data);
+                $(".active").removeClass("active");
+                $("#myQRBtn").addClass("active");
             }
         });
     });

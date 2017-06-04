@@ -18,3 +18,8 @@ class AccountController(ActionController):
 
     def charge_money(self,request):
         return getTpl({},'account/add_money')
+
+    def qrcode(self,request):
+        user = request.session['user']
+        shopId = user.shop_id
+        return getTpl({'shop_id':shopId},'account/qrcode')
