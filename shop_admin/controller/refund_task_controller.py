@@ -6,10 +6,13 @@ from shop_admin.model.verify_refund import VerifyRefund
 from shop_admin.model.log_change_money import LogShopMoney
 from shop_admin.model.shop_account import ShopAccount
 from django.db.models import F
+from shop_admin.nsq_producer.reject_notify_producer import RejectNotifier
 import json
 import math
 # from django.db import connection
 pageSize = 50
+
+rejectNotify = RejectNotifier()
 
 class RefundTaskController(ActionController):
 
@@ -58,6 +61,8 @@ class RefundTaskController(ActionController):
         else:
             effectRows = UserUpload.objects.filter(id=id,shop_id=user.shop_id,verify_flag=0).\
                     update(verify_flag=verify_flag,accept_flag=accept_flag)
+            # notify client
+            rejectNotify.pub_message([id])
             if effectRows == 0:
                 return HttpResponse("false")
         return HttpResponse("true")
@@ -95,6 +100,8 @@ class RefundTaskController(ActionController):
         else:
             effectRows = UserUpload.objects.filter(id__in=ids, shop_id=user.shop_id, verify_flag=0). \
                 update(verify_flag=verify_flag, accept_flag=accept_flag)
+            # notify client
+            rejectNotify.pub_message(ids)
             # print connection.queries
             if effectRows == 0:
                 return HttpResponse("false")
