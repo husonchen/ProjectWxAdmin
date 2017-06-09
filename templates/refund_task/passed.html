@@ -5,9 +5,27 @@
                             <div class="widget-head am-cf">
                                 <div class="widget-title  am-cf">审核通过</div>
 
-
                             </div>
                              <div class="widget-body  am-fr">
+                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                                <div class="am-form-group tpl-table-list-select">
+                                        <select data-am-selected="{btnSize: 'sm'}" style="display: none;" id="typeSelect" onchange="changeType()">
+                                          <option value="1">全部</option>
+                                          <option value="2">已发红包</option>
+                                          <option value="3">未发红包</option>
+                                        </select>
+                                </div>
+                            </div>
+                                <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                                    <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                        <input type="text" class="am-form-field " id="searchText">
+                                        <span class="am-input-group-btn">
+                                        <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button" id="searchBtn"></button>
+                                        </span>
+                                    </div>
+                                </div>
+
+
                                  <div class="am-u-sm-12">
                                     <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
                                     <thead>
@@ -18,31 +36,14 @@
                                             <th >修改日期</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="tableBody">
+                                        <tbody id="tableBody" >
                                         {% include 'refund_task/passed_table.html' %}
-                                    </tbody>
+                                        </tbody>
                                 </table>
                                 <div class="am-u-lg-12 am-cf">
 
                                     <div class="am-fr">
-                                        <ul class="am-pagination tpl-pagination">
-{#                                            <li hidden='hidden' class="am-disabled"><a href="#">«</a></li>#}
-                                            <li class="pageBtn am-active"><a href="#">1</a></li>
-                                            {% if pageNum >= 2 %}
-                                            <li class='pageBtn'><a href="#">2</a></li>
-                                            {% endif %}
-                                            {% if pageNum >= 3 %}
-                                            <li class='pageBtn'><a href="#">3</a></li>
-                                            {% endif %}
-                                            {% if pageNum >= 4 %}
-                                            <li class='pageBtn'><a href="#">4</a></li>
-                                            {% endif %}
-                                            {% if pageNum >= 5 %}
-                                            <li class='pageBtn'><a href="#">5</a></li>
-                                            {% endif %}
-                                            {% if pageNum >= 6 %}
-                                            <li><a href="#">»</a></li>
-                                            {% endif %}
+                                        <ul class="am-pagination tpl-pagination" id="pageList" >
                                         </ul>
                                     </div>
                                 </div>
@@ -55,31 +56,79 @@
                 </div>
                 <div class="tpl-alert"></div>
             </div>
+                </div>
+</div>
 
-
+                <script src="/assets/js/amazeui.min.js"></script>
+    <script src="/assets/js/iscroll.js"></script>
+    <script src="/assets/js/app.js"></script>
 <script>
 
+    $(document).ready(function () {
+        console.log('doc ready');
+       var pageNum = $('#totalNumDiv').attr('totalPage');
+       console.log('pageNum'+pageNum);
+       initPage(1,pageNum);
+    });
+    function changeType() {
+        resetPage();
+        flushData();
+    }
     $(".pageBtn").click(function () {
-        var page = $(this).children()[0].text;
-        console.log(page);
+        $('.pageBtn').removeClass('am-active');
+        $(this).addClass('am-active');
+        flushData();
+    });
 
+    $("#searchBtn").click(function () {
+        resetPage();
+        flushData();
+    });
+    function flushData() {
+        var page = 1;
+        if($(".pageBtn am-active").length != 0)
+            page = $(".pageBtn am-active").children()[0].text;
+        console.log('currentPage:'+page);
+        var type = $("#typeSelect").val();
+        console.log('refundType:'+type);
+        var searchText = $("#searchText").val();
+        console.log('searchText:'+searchText);
         $.ajax({
             type: "get",
             url:"/refund_task/passed_table/",
-            data:{page:page},
+            data:{page:page,search:searchText,type:type},
             async: false,
             error: function(request) {
                 alert("Connection error");
             },
             success: function(data) {
-                $('#tableBody').html(data)
+                $('#tableBody').html(data);
+                var pageNum = $('#totalNumDiv').attr('totalPage');
+                initPage(page,pageNum);
             }
         });
-        $('.pageBtn').removeClass('am-active');
-        $(this).addClass('am-active');
-    });
+    }
 
+    function resetPage() {
+        $('#tableBody').html("");
+        $('#pageList').html("");
+    }
 
+    function initPage(currentPage,totalPage) {
+        var startPage = currentPage - 5 >= 1?currentPage-5:1
+        var endPage = currentPage + 5 <= totalPage? currentPage+5:totalPage;
+        text = '';
+        for(var i = startPage ; i <= endPage ; ){
+            if(i == currentPage){
+                text += "<li id=\"page"+i+"\" class=\"pageBtn am-active\"><a href=\"#\">"+i+"</a></li>";
+            }else {
+                text += "<li id=\"page" + i + "\" class=\"pageBtn\"><a href=\"#\">" + i + "</a></li>";
+            }
+            i ++;
+        }
+        console.log(text);
+        $('#pageList').html( text);
+    }
 </script>
 
 

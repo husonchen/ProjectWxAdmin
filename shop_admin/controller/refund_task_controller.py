@@ -117,12 +117,40 @@ class RefundTaskController(ActionController):
         return getTpl({'uploads': uploads, 'pageNum': pageNum}, 'refund_task/passed')
 
     def passed_table(self,request):
+        searchText = request.GET['search']
+        type = int(request.GET['type'])
         page = int(request.GET['page'])
         user = request.session['user']
         shopId = user.shop_id
-        uploads = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False).order_by('-id')[(page - 1) * pageSize:page * pageSize]
 
-        return getTpl({'uploads': uploads}, 'refund_task/passed_table')
+        if type == 1:
+            uploads = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False, order_id__contains=searchText).order_by('id')[
+                      (page - 1) * pageSize:page * pageSize]
+            num = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False, order_id__contains=searchText).count()
+            pageNum = math.ceil(float(num) / 10)
+
+        elif type == 2:
+            uploads = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False, order_id__contains=searchText,refund_flag=1).order_by('id')[
+                      (page - 1) * pageSize:page * pageSize]
+            num = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False, order_id__contains=searchText,refund_flag=1).count()
+            pageNum = math.ceil(float(num) / 10)
+
+        else :
+            uploads = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False, order_id__contains=searchText,refund_flag=0).order_by('id')[
+                      (page - 1) * pageSize:page * pageSize]
+            num = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False, order_id__contains=searchText,refund_flag=0).count()
+            pageNum = math.ceil(float(num) / 10)
+        return getTpl({'uploads': uploads, 'pageNum': pageNum}, 'refund_task/passed_table')
+
+    def passed_table_search(self,request):
+        text = request.GET['searchText']
+        user = request.session['user']
+
+        shopId = user.shop_id
+        uploads = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False,order_id__contains=text).order_by('id')[0:pageSize]
+        num = VerifyRefund.objects.filter(shop_id=shopId, del_flag=False,order_id__contains=text).count()
+        pageNum = math.ceil(float(num) / 10)
+        return getTpl({'uploads': uploads, 'pageNum': pageNum}, 'refund_task/passed')
 
     def reject(self,request):
         user = request.session['user']
