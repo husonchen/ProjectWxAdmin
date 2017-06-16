@@ -1,7 +1,8 @@
+{% load currency_helper %}
 {% for upload in uploads %}
                                         <tr id="tr_{{ upload.id }}" class="gradeX">
                                             <td class="am-text-middle">{{ upload.order_id }}</td>
-                                            <td class="am-text-middle">{% widthratio upload.money 100 1%}</td>
+                                            <td class="am-text-middle">{{  upload.money |to_currency}}</td>
                                             <td class="am-text-middle">
                                             {% if upload.refund_flag %}
                                             已发

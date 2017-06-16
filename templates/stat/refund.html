@@ -1,0 +1,151 @@
+<script src="/assets/js/echarts.min.js"></script>
+<div class="row-content am-cf">
+    <div class="row  am-cf">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title am-fl">今日红包</div>
+                    <div class="widget-function am-fr">
+                        <a href="javascript:;" class="am-icon-cog"></a>
+                    </div>
+                </div>
+                <div class="widget-body am-fr">
+                    <div class="am-fl">
+                        <div class="widget-fluctuation-period-text">
+                            {{ refund_num }}个
+
+                        </div>
+                    </div>
+                    <div class="am-fr am-cf">
+                        <div class="widget-fluctuation-description-amount text-success" am-cf>
+                            ￥{{ refund_money }}
+
+                        </div>
+                        <div class="widget-fluctuation-description-text am-text-right">
+                            总金额
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="am-u-sm-12 am-u-md-6 am-u-lg-4">
+            <div class="widget widget-primary am-cf">
+                <div class="widget-statistic-header">
+                    本月红包
+                </div>
+                <div class="widget-statistic-body">
+                    <div class="widget-statistic-value">
+                        ￥{{ m_refund_money }}
+                    </div>
+                    <div class="widget-statistic-description">
+                        总个数 {{ m_refund_num }}个
+                    </div>
+                    <span class="widget-statistic-icon am-icon-credit-card-alt"></span>
+                </div>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-6 am-u-lg-4">
+            <div class="widget widget-purple am-cf">
+                <div class="widget-statistic-header">
+
+                </div>
+                <div class="widget-statistic-body">
+                    <div class="widget-statistic-value">
+
+                    </div>
+                    <div class="widget-statistic-description">
+
+                    </div>
+                    <span class="widget-statistic-icon am-icon-support"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row am-cf">
+        <div class="widget am-cf">
+            <div class="widget-head am-cf">
+                <div class="widget-title am-fl">每日红包</div>
+                <div class="widget-function am-fr">
+                    <a href="javascript:;" class="am-icon-cog"></a>
+                </div>
+            </div>
+            <div class="widget-body am-fr">
+                <div style="height: 400px" class="" id="tpl-echarts-A">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="/assets/js/amazeui.datatables.min.js"></script>
+    <script src="/assets/js/dataTables.responsive.min.js"></script>
+ <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('tpl-echarts-A'));
+
+        // 指定图表的配置项和数据
+        var option = {
+    title: {
+        text: '每日红包图'
+    },
+    tooltip : {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            label: {
+                backgroundColor: '#6a7985'
+            }
+        }
+    },
+    legend: {
+        data:['红包个数','红包金额']
+    },
+    toolbox: {
+        feature: {
+            saveAsImage: {}
+        }
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : {{ date_data }}
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'红包个数',
+            type:'line',
+            stack: '总量',
+            areaStyle: {normal: {}},
+            data:{{ num_data }}
+        },
+        {
+            name:'红包金额',
+            type:'line',
+            stack: '总量',
+            areaStyle: {normal: {}},
+            data:{{ money_data }}
+        }
+    ]
+};
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>

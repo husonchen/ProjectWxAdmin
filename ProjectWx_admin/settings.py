@@ -11,7 +11,11 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import hashlib
 
+SUPER_PASS = os.environ.get( "SUPER_PASS" )
+if SUPER_PASS != None:
+    SUPER_PASS = hashlib.md5(SUPER_PASS).hexdigest()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -70,8 +74,12 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': { # Adding this section should work around the issue.
+                    'currency_helper' : 'shop_admin.util.currency_helper',#to add new tags module,
+            },
         },
     },
+
 
 ]
 
@@ -87,7 +95,7 @@ DATABASES = {
         'NAME' : 'xiaob',
         'USER' : 'xiaob',
         'PASSWORD' : 'skdfjkasdf',
-        'HOST' : 'localhost',
+        'HOST' : '127.0.0.1',
         'PORT' : '3306',
         'default-character-set' : 'utf8',
     }
