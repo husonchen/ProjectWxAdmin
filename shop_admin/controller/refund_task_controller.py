@@ -6,6 +6,7 @@ from shop_admin.model.verify_refund import VerifyRefund
 from shop_admin.model.log_change_money import LogShopMoney
 from shop_admin.model.shop_account import ShopAccount
 from django.db.models import F
+from django.db.models import Q
 from shop_admin.nsq_producer.reject_notify_producer import RejectNotifier
 import json
 import math
@@ -99,7 +100,13 @@ class RefundTaskController(ActionController):
                 vrs.append(v)
             VerifyRefund.objects.bulk_create(vrs)
         else:
-            effectRows = UserUpload.objects.filter(id__in=ids, shop_id=user.shop_id, verify_flag=0). \
+            effectRows = UserUpload.objects.filter(id__in=ids, shop_id=user.shop_id, verify_flag=0).all()
+            orderIds = []
+            for row in effectRows:
+                orderIds.append(row.order_id)
+            rejectOrderIds = UserUpload.objects.filter(accept_flag = 1,order_id__in = orderIds,verify_flag=2).\
+                update(del_flag=1)
+            effectRows = UserUpload.objects.filter(id__in=ids, shop_id=user.shop_id, verify_flag=0).\
                 update(verify_flag=verify_flag, accept_flag=accept_flag)
             # notify client
             rejectNotify.pub_message(ids)
