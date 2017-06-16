@@ -61,8 +61,11 @@ class RefundTaskController(ActionController):
                              money=logMoney.money, update_time=None, create_time=None)
             v.save()
         else:
-            effectRows = UserUpload.objects.filter(id=id,shop_id=user.shop_id,verify_flag=0).\
-                    update(verify_flag=verify_flag,accept_flag=accept_flag)
+            effectRows = UserUpload.objects.filter(id=id,shop_id=user.shop_id,verify_flag=0).all()[0]
+            rejectOrderIds = UserUpload.objects.filter(accept_flag=1, order_id=effectRows.order_id, verify_flag=2). \
+                delete()
+            effectRows = UserUpload.objects.filter(id=id, shop_id=user.shop_id, verify_flag=0). \
+                update(verify_flag=verify_flag, accept_flag=accept_flag)
             # notify client
             rejectNotify.pub_message([id])
             if effectRows == 0:
