@@ -77,11 +77,13 @@ $(document).ready(function () {
        initPage(1,pageNum);
     });
 
-    $(".pageBtn").click(function () {
+    $('#pageList').on( "click", ".pageBtn", function() {
+        console.log(this.id);
         $('.pageBtn').removeClass('am-active');
         $(this).addClass('am-active');
         flushData();
     });
+
 
     $("#searchBtn").click(function () {
         resetPage();
@@ -89,8 +91,8 @@ $(document).ready(function () {
     });
     function flushData() {
         var page = 1;
-        if($(".pageBtn am-active").length != 0)
-            page = $(".pageBtn am-active").children()[0].text;
+        if($(".pageBtn.am-active").length != 0)
+            page = $(".pageBtn.am-active").children()[0].text;
         console.log('currentPage:'+page);
         var type = $("#typeSelect").val();
         console.log('refundType:'+type);
@@ -118,6 +120,8 @@ $(document).ready(function () {
     }
 
     function initPage(currentPage,totalPage) {
+        currentPage = parseInt(currentPage);
+        totalPage = parseInt(totalPage);
         var startPage = currentPage - 5 >= 1?currentPage-5:1
         var endPage = currentPage + 5 <= totalPage? currentPage+5:totalPage;
         text = '';

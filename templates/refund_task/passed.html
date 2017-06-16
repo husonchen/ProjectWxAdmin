@@ -73,11 +73,18 @@
         resetPage();
         flushData();
     }
-    $(".pageBtn").click(function () {
+    $('#pageList').on( "click", ".pageBtn", function() {
+        console.log(this.id);
         $('.pageBtn').removeClass('am-active');
         $(this).addClass('am-active');
         flushData();
-    });
+    })
+{#    $(".pageBtn").click(function () {#}
+{#        console.log(this.id);#}
+{#        $('.pageBtn').removeClass('am-active');#}
+{#        $(this).addClass('am-active');#}
+{#        flushData();#}
+{#    });#}
 
     $("#searchBtn").click(function () {
         resetPage();
@@ -85,8 +92,8 @@
     });
     function flushData() {
         var page = 1;
-        if($(".pageBtn am-active").length != 0)
-            page = $(".pageBtn am-active").children()[0].text;
+        if($(".pageBtn.am-active").length != 0)
+            page = $(".pageBtn.am-active").children()[0].text;
         console.log('currentPage:'+page);
         var type = $("#typeSelect").val();
         console.log('refundType:'+type);
@@ -103,6 +110,7 @@
             success: function(data) {
                 $('#tableBody').html(data);
                 var pageNum = $('#totalNumDiv').attr('totalPage');
+                console.log(pageNum);
                 initPage(page,pageNum);
             }
         });
@@ -114,8 +122,12 @@
     }
 
     function initPage(currentPage,totalPage) {
-        var startPage = currentPage - 5 >= 1?currentPage-5:1
+        currentPage = parseInt(currentPage);
+        totalPage = parseInt(totalPage);
+        var startPage = currentPage - 5 >= 1?currentPage-5:1;
+        console.log('startPage:'+startPage);
         var endPage = currentPage + 5 <= totalPage? currentPage+5:totalPage;
+        console.log('endPage:'+endPage);
         text = '';
         for(var i = startPage ; i <= endPage ; ){
             if(i == currentPage){
