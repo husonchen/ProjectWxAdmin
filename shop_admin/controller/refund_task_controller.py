@@ -104,8 +104,8 @@ class RefundTaskController(ActionController):
             orderIds = []
             for row in effectRows:
                 orderIds.append(row.order_id)
-            rejectOrderIds = UserUpload.objects.filter(accept_flag = 1,order_id__in = orderIds,verify_flag=2).\
-                update(del_flag=1)
+            rejectOrderIds = UserUpload.objects.filter(accept_flag = 1,order_id__in = orderIds,verify_flag=2). \
+                delete()
             effectRows = UserUpload.objects.filter(id__in=ids, shop_id=user.shop_id, verify_flag=0).\
                 update(verify_flag=verify_flag, accept_flag=accept_flag)
             # notify client
