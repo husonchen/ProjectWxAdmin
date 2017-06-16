@@ -13,7 +13,13 @@ class StatController(ActionController):
         shop_id = user.shop_id
         today = datetime.date.today()
         tomonth = int(today.replace(day=1).strftime('%Y%m%d'))
-        rf = VerifyRefund.objects.all().filter(create_time__gte = today,shop_id=shop_id).values('shop_id').annotate(refund_num=Count('id'),refund_money=Sum('money'))[0]
+        rf = VerifyRefund.objects.all().filter(create_time__gte = today,shop_id=shop_id).values('shop_id').annotate(refund_num=Count('id'),refund_money=Sum('money')).all()
+        if len(rf) == 0:
+            rf = {}
+            rf['refund_num'] = 0
+            rf['refund_money'] = 0
+        else:
+            rf = rf[0]
         shopstats = ShopStats.objects.filter(shop_id=shop_id).order_by('-day')[0:10]
         mstats = ShopStats.objects.all().filter(day__gte = tomonth,shop_id=shop_id).values('shop_id').annotate(m_refund_num=Sum('refund_num'),m_refund_money=Sum('refund_money'))[0]
         num_data = []
