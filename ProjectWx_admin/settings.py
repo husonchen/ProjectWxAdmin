@@ -153,7 +153,7 @@ LOGGING = {
         'applogfile': {
             'level':'INFO',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': '~/logs/ProjectWx_admin/app.log',
+            'filename': 'logs/app.log',
             'maxBytes': 1024*1024*15,
             'backupCount': 10,
         },
