@@ -35,7 +35,7 @@ class DashboardController(ActionController):
             if myfile.has_key('myfile') == False:
                 return 'not ok'
             content = myfile['myfile'].read()
-            lines = content.split('\r\n')
+            lines = content.replace('\r','').split('\n')
             id_list = []
             for line in lines[1:len(lines)]:
                 if line == '':
