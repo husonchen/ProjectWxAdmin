@@ -21,7 +21,10 @@ class StatController(ActionController):
         else:
             rf = rf[0]
         shopstats = ShopStats.objects.filter(shop_id=shop_id).order_by('-day')[0:10]
-        mstats = ShopStats.objects.all().filter(day__gte = tomonth,shop_id=shop_id).values('shop_id').annotate(m_refund_num=Sum('refund_num'),m_refund_money=Sum('refund_money'))[0]
+        try:
+            mstats = ShopStats.objects.all().filter(day__gte = tomonth,shop_id=shop_id).values('shop_id').annotate(m_refund_num=Sum('refund_num'),m_refund_money=Sum('refund_money'))[0]
+        except:
+            mstats = {'m_refund_num':0,'m_refund_money':0}
         num_data = []
         money_data = []
         date_data = []
