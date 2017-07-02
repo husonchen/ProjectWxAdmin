@@ -26,7 +26,8 @@ con.commit()
 
 cur.execute("SELECT DISTINCT (shop_id) from shop_setting")
 shops = cur.fetchall()
-
+print yesterday_s
+print today_s
 cur.execute('SELECT shop_id,count(1),sum(money) from verify_refund where create_time>=%s and create_time<%s group by shop_id ',(yesterday_s,today_s))
 refunds = cur.fetchall()
 refundDict = {}
@@ -38,6 +39,7 @@ for shop in shops:
         cur.execute("Insert into shop_stats(shop_id,day,refund_num,refund_money) values(%d,%d,%d,%d)"
                     % (shop_id,yesterday_int,0,0))
     else:
+	refund = refundDict[shop_id]
         cur.execute("Insert into shop_stats(shop_id,day,refund_num,refund_money) values(%d,%d,%d,%d)"
                     % (shop_id, yesterday_int, refund[1], refund[2]))
 
