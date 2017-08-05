@@ -1,6 +1,7 @@
 from django_url_framework.controller import ActionController
 from shop_admin.util.TplHelper import *
 from shop_admin.model.shop_user import ShopUser
+from shop_admin.model.shop_setting import ShopSetting
 from ProjectWx_admin.settings import SUPER_PASS
 
 class LoginController(ActionController):
@@ -28,7 +29,8 @@ class LoginController(ActionController):
         except :
             return HttpResponse("false")
 
-
+        seting = ShopSetting.objects.get(shop_id=user.shop_id)
+        user.seting = seting.name
         request.session['user'] = user
         return HttpResponse("true")
 
