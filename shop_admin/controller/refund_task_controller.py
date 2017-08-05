@@ -15,6 +15,7 @@ pageSize = 50
 
 rejectNotify = RejectNotifier()
 
+
 class RefundTaskController(ActionController):
 
     def task(self,request):
@@ -67,7 +68,7 @@ class RefundTaskController(ActionController):
             effectRows = UserUpload.objects.filter(id=id, shop_id=user.shop_id, verify_flag=0). \
                 update(verify_flag=verify_flag, accept_flag=accept_flag)
             # notify client
-            rejectNotify.pub_message([id])
+            rejectNotify.pub_message({'ids':[id],'shop_id':user.shop_id})
             if effectRows == 0:
                 return HttpResponse("false")
         return HttpResponse("true")
@@ -112,7 +113,7 @@ class RefundTaskController(ActionController):
             effectRows = UserUpload.objects.filter(id__in=ids, shop_id=user.shop_id, verify_flag=0).\
                 update(verify_flag=verify_flag, accept_flag=accept_flag)
             # notify client
-            rejectNotify.pub_message(ids)
+            rejectNotify.pub_message({'ids':[ids],'shop_id':user.shop_id})
             # print connection.queries
             if effectRows == 0:
                 return HttpResponse("false")
