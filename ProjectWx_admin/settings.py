@@ -92,7 +92,7 @@ WSGI_APPLICATION = 'ProjectWx_admin.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME' : 'xiaob',
+        'NAME' : 'xunhui',
         'USER' : 'xiaob',
         'PASSWORD' : 'skdfjkasdf',
         'HOST' : '127.0.0.1',
@@ -132,7 +132,7 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': '127.0.0.1:11211',
         'TIMEOUT': None,
-        'KEY_PREFIX' : 'chenlan_',
+        'KEY_PREFIX' : 'xunhui_',
     }
 }
 
