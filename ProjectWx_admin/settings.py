@@ -33,7 +33,7 @@ if syst == 'ELF':
     DEBUG = False
 else :
     DEBUG = True
-
+DEBUG = True
 ALLOWED_HOSTS = ['admin.51dingxiao.com','localhost','127.0.0.1']
 
 APPEND_SLASH = True

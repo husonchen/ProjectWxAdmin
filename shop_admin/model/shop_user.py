@@ -7,7 +7,6 @@ class ShopUser(models.Model):
     shop_id = models.IntegerField()
     user_name = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
-    shop_name = models.CharField(max_length=255)
     create_time = models.DateTimeField()
     update_time = models.DateTimeField()
     del_flag = models.BooleanField(default=0)
