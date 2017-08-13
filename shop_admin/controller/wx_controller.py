@@ -2,16 +2,20 @@ from django_url_framework.controller import ActionController
 import xml.etree.ElementTree as ET
 from shop_admin.wx.WXBizMsgCrypt import WXBizMsgCrypt
 from ProjectWx_admin.settings import APPID,TOKEN
+import logging
+
+logger = logging.getLogger(__name__)
 
 class WxController(ActionController):
     def open(self,request):
+        logger.error('wx open')
         # signature = request.GET['signature']
         # timestamp = request.GET['timestamp']
         nonce = request.GET['nonce']
         # encrypt_type = request.GET['encrypt_type']
         # msg_signature = request.GET['msg_signature']
         data = request.body
-        print data 
+        print data
         encryp_test = WXBizMsgCrypt(TOKEN, data, APPID)
         ret, encrypt_xml = encryp_test.EncryptMsg(encryp_test, nonce)
 
