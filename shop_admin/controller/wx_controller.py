@@ -3,10 +3,12 @@ import xml.etree.ElementTree as ET
 from shop_admin.wx.WXBizMsgCrypt import WXBizMsgCrypt
 from ProjectWx_admin.settings import APPID,TOKEN
 import logging
+from django.views.decorators.csrf import csrf_exempt
 
 logger = logging.getLogger('shop_admin')
 
 class WxController(ActionController):
+    @csrf_exempt
     def open(self,request):
         logger.info('wx open')
         # signature = request.GET['signature']
@@ -15,7 +17,7 @@ class WxController(ActionController):
         # encrypt_type = request.GET['encrypt_type']
         # msg_signature = request.GET['msg_signature']
         data = request.body
-        logger.log(data)
+        logger.info(data)
         encryp_test = WXBizMsgCrypt(TOKEN, data, APPID)
         ret, encrypt_xml = encryp_test.EncryptMsg(encryp_test, nonce)
 
