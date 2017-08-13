@@ -140,6 +140,14 @@ CACHES = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
@@ -150,6 +158,7 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
+
         },
         'applogfile': {
             'level':'INFO',
@@ -157,12 +166,18 @@ LOGGING = {
             'filename': 'logs/app.log',
             'maxBytes': 1024*1024*15,
             'backupCount': 10,
+            'formatter': 'verbose'
         },
     },
     'loggers': {
         'django.request': {
             'handlers': ['applogfile'],
             'level': 'ERROR',
+            'propagate': True,
+        },
+        'shop_admin': {
+            'handlers': ['applogfile'],
+            'level': 'INFO',
             'propagate': True,
         },
     }
