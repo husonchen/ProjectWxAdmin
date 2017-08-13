@@ -6,17 +6,22 @@ import json
 import os
 import datetime
 
+
 reload(sys)
 exec("sys.setdefaultencoding('utf-8')")
-
-today=datetime.date.today()
+if len(sys.argv) == 1:
+    today=datetime.date.today()
+else:
+    d = sys.argv[1]
+    print d
+    today = datetime.datetime.strptime(d,'%Y%m%d')
 oneday=datetime.timedelta(days=1)
 yesterday=(today-oneday)
 yesterday_int = int(yesterday.strftime('%Y%m%d'))
 yesterday_s = yesterday.strftime('%Y-%m-%d')
 today_s = today.strftime('%Y-%m-%d')
 
-con = mdb.connect('127.0.0.1', 'xiaob', 'skdfjkasdf', 'xiaob')
+con = mdb.connect('127.0.0.1', 'xiaob', 'skdfjkasdf', 'xunhui')
 con.set_character_set('utf8')
 cur = con.cursor()
 cur.execute("SET NAMES utf8")

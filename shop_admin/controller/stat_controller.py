@@ -32,6 +32,8 @@ class StatController(ActionController):
             num_data.append(shopstat.refund_num)
             money_data.append(float(shopstat.refund_money)/100)
             date_data.append(shopstat.day)
+        #from django.db import connection
+        #print connection.queries
         c = {'refund_num':rf['refund_num'],'refund_money':float(rf['refund_money']) / 100,
              'num_data':json.dumps(num_data),'money_data':json.dumps(money_data),'date_data':json.dumps(date_data),
              'm_refund_num':mstats['m_refund_num']+rf['refund_num'],'m_refund_money':float(mstats['m_refund_money']+rf['refund_money'])/100}
