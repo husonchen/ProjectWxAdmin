@@ -35,7 +35,8 @@ else :
     DEBUG = True
 DEBUG = True
 ALLOWED_HOSTS = ['admin.51dingxiao.com','localhost','127.0.0.1']
-
+TOKEN = 'huson8horiebin'
+APPID = 'wx006de79418c0206a'
 APPEND_SLASH = True
 # Application definition
 
