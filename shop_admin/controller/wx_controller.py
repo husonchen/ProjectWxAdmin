@@ -17,16 +17,17 @@ class WxController(ActionController):
         # encrypt_type = request.GET['encrypt_type']
         msg_signature = request.GET['msg_signature']
         data = request.body
-        logger.info(data)
+        encrypt_msg = ET.fromstring(data).find('Encrypt').text
+        logger.info(encrypt_msg)
         encryp_test = WXBizMsgCrypt(TOKEN, encodingAESKey, APPID)
-        ret, encrypt_xml = encryp_test.DecryptMsg(data,msg_signature,timestamp,nonce)
-
+        ret, encrypt_xml = encryp_test.DecryptMsg(encrypt_msg,msg_signature,timestamp,nonce)
+        logger.info(ret,encrypt_xml)
         xml = ET.fromstring(encrypt_xml)
         appid = xml.find('AppId').text
         create_time = xml.find('CreateTime').text
         infotype = xml.find('InfoType').text
         if infotype == 'component_verify_ticket':
             ComponentVerifyTicket = xml.find('ComponentVerifyTicket').text
-            print ComponentVerifyTicket
+            logger.info(ComponentVerifyTicket)
 
 
