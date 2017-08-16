@@ -46,7 +46,35 @@
                         <li class="am-text-sm tpl-header-navbar-welcome">
                             <a href="javascript:;">欢迎你, <span>{{ userName }}</span> </a>
                         </li>
+<!-- 新邮件 -->
+                        <li class="am-dropdown tpl-dropdown" data-am-dropdown>
+                            <a href="javascript:;" class="am-dropdown-toggle tpl-dropdown-toggle" data-am-dropdown-toggle>
+                                <i class="am-icon-envelope">切换公众号</i>
+                                <span class="am-badge am-badge-success am-round item-feed-badge"></span>
+                            </a>
+                            <!-- 弹出列表 -->
+                            <ul class="am-dropdown-content tpl-dropdown-content">
+                                <li class="tpl-dropdown-menu-messages">
+                                    <a href="javascript:;" class="tpl-dropdown-menu-messages-item am-cf">
+                                        <div class="menu-messages-ico">
+                                            <img src="assets/img/user04.png" alt="">
+                                        </div>
+                                        <div class="menu-messages-time">
 
+                                        </div>
+                                        <div class="menu-messages-content">
+                                            <div class="menu-messages-content-title">
+                                                <i class="am-icon-circle-o am-text-success"></i>
+                                                <span>迅惠通</span>
+                                            </div>
+                                            <div class="am-text-truncate">  </div>
+                                            <div class="menu-messages-content-time"></div>
+                                        </div>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
 
                         <!-- 退出 -->
                         <li class="am-text-sm">
@@ -133,7 +161,13 @@
                         <i class="am-icon-table sidebar-nav-link-logo"></i> 设置
                         <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
                     </a>
+
                     <ul class="sidebar-nav sidebar-nav-sub">
+                        <li class="sidebar-nav-link">
+                            <a href="javascript:;" id="mediaPlatformBtn">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 公众号
+                            </a>
+                        </li>
                         <li class="sidebar-nav-link">
                             <a href="javascript:;" id="moneyAmountBtn">
                                 <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 红包金额
@@ -401,6 +435,22 @@ $(document).ready(function () {
                 $("#mainContent").html(data);
                 $(".active").removeClass("active");
                 $("#accountChargeBtn").addClass("active");
+            }
+        });
+    });
+    $("#mediaPlatformBtn").click(function () {
+        $.ajax({
+            type: "get",
+            url:"/setting/media_platform",
+            data:{},
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                $("#mainContent").html(data);
+                $(".active").removeClass("active");
+                $("#mediaPlatformBtn").addClass("active");
             }
         });
     });

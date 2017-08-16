@@ -1,33 +1,31 @@
 from django_url_framework.controller import ActionController
 import xml.etree.ElementTree as ET
-from shop_admin.wx.WXBizMsgCrypt import WXBizMsgCrypt
-from ProjectWx_admin.settings import APPID,TOKEN,encodingAESKey
+from shop_admin.wx.wx_utils import *
 import logging
 from django.views.decorators.csrf import csrf_exempt
-
+from shop_admin.model.server_config import saveSetting
 logger = logging.getLogger('shop_admin')
 
 class WxController(ActionController):
     @csrf_exempt
     def open(self,request):
         logger.info('wx open')
-        signature = request.GET['signature']
         timestamp = request.GET['timestamp']
         nonce = request.GET['nonce']
         # encrypt_type = request.GET['encrypt_type']
         msg_signature = request.GET['msg_signature']
         data = request.body
-        encrypt_msg = ET.fromstring(data).find('Encrypt').text
-        logger.info(encrypt_msg)
-        encryp_test = WXBizMsgCrypt(TOKEN, encodingAESKey, APPID)
-        ret, encrypt_xml = encryp_test.DecryptMsg(encrypt_msg,msg_signature,timestamp,nonce)
-        logger.info(ret,encrypt_xml)
-        xml = ET.fromstring(encrypt_xml)
+
+        decrypt_xml = get_decrypt_xml(data,msg_signature,timestamp,nonce)
+        xml = ET.fromstring(decrypt_xml)
         appid = xml.find('AppId').text
         create_time = xml.find('CreateTime').text
         infotype = xml.find('InfoType').text
         if infotype == 'component_verify_ticket':
             ComponentVerifyTicket = xml.find('ComponentVerifyTicket').text
             logger.info(ComponentVerifyTicket)
+            saveSetting('admin','component_verify_ticket',ComponentVerifyTicket)
+        return 'success'
+
 
 

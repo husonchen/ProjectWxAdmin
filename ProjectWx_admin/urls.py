@@ -24,7 +24,7 @@ site = Site()
 site.autodiscover()
 
 urlpatterns = [
-    url(r'^$',shop_admin.controller.index.hello),
+    url(r'index/',shop_admin.controller.index.hello),
     url(r'^', include(site.urls)),
 ] #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

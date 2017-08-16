@@ -2,6 +2,7 @@ from django_url_framework.controller import ActionController
 from shop_admin.model.log_change_money import LogShopMoney
 from shop_admin.util.TplHelper import *
 from shop_admin.model.shop_user import *
+from django.shortcuts import render
 
 class SettingController(ActionController):
     def lucky_money(self,request):
@@ -38,3 +39,6 @@ class SettingController(ActionController):
         else :
             ShopUser.objects.filter(id=user.id).update(password=new_pass)
             return HttpResponse("true")
+
+    def media_platform(self,request):
+        return render(request, 'setting/media _platform.html', {})
