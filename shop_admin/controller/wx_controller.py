@@ -27,5 +27,7 @@ class WxController(ActionController):
             saveSetting('admin','component_verify_ticket',ComponentVerifyTicket)
         return 'success'
 
-
-
+    def add_mp(self,request):
+        user = request.session['user']
+        pre_auth_code = get_pre_auth_code()
+        return wx_auth_page(pre_auth_code,'/dashboard/')
