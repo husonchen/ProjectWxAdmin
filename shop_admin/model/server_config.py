@@ -27,4 +27,4 @@ def getSetting(namespace,key):
 def saveSetting(namespace,key,value):
     mc_key = namespace + '_' + key
     cache.set(mc_key, value)
-    obj, created = ServerConfig.objects.update_or_create(name_space=namespace, k=key,v=value)
+    obj, created = ServerConfig.objects.update_or_create(name_space=namespace, k=key,v=value,defaults={'v':value})
