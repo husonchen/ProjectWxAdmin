@@ -1,51 +1,52 @@
-
+{% load mathfilters %}
             <div class="container-fluid am-cf">
                 <div class="row">
-                    <div class="am-u-sm-12 am-u-md-12 am-u-lg-9">
+                    <div class="am-u-sm-8 am-u-md-8 am-u-lg-6">
                         <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 公众号 <small></small></div>
                         <p class="page-header-description">您可以在这里添加公众号</p>
                     </div>
                     <div class="am-u-lg-3 tpl-index-settings-button">
-                        <button  onclick="window.location.href='/wx/add_mp/'" type="button" class="page-header-button"><span class="am-icon-paint-brush"></span> 新增</button>
+                        <button  onclick="window.location.href='/wx/add_mp/?type=0'" type="button" class="page-header-button"><span class="am-icon-paint-brush"></span> 添加天猫公众号</button>
+                    </div>
+                    <div class="am-u-lg-3 tpl-index-settings-button">
+                        <button  onclick="window.location.href='/wx/add_mp/?type=2'" type="button" class="page-header-button"><span class="am-icon-paint-brush"></span> 添加京东公众号</button>
                     </div>
                 </div>
+
 
             </div>
 
             <div class="row-content am-cf">
 
                 <div class="row am-cf">
-                    <div class="am-u-sm-offset-2 am-u-sm-12 am-u-md-12 am-u-lg-4 widget-margin-bottom-lg ">
-                        <div class="tpl-user-card am-text-center widget-body-lg">
-                            <div class="tpl-user-card-title">
-                                禁言小张
-                            </div>
-                            <div class="achievement-subheading">
-                                月度最佳员工
-                            </div>
-                            <img class="achievement-image" src="assets/img/user07.png" alt="">
-                            <div class="achievement-description">
-                                禁言小张在
-                                <strong>30天内</strong> 禁言了
-                                <strong>200多</strong>人。
-                            </div>
-                        </div>
-                    </div>
-                    <div class="am-u-end am-u-sm-12 am-u-md-12 am-u-lg-4 widget-margin-bottom-lg ">
-                        <div class="tpl-user-card am-text-center widget-body-lg">
-                            <div class="tpl-user-card-title">
-                                禁言小张
-                            </div>
-                            <div class="achievement-subheading">
-                                月度最佳员工
-                            </div>
-                            <img class="achievement-image" src="assets/img/user07.png" alt="">
-                            <div class="achievement-description">
-                                禁言小张在
-                                <strong>30天内</strong> 禁言了
-                                <strong>200多</strong>人。
+                    <div class="row am-u-sm-{{  mp_list|length|mul:4 }} am-u-sm-centered">
+                    {% with c=mp_list.count %}
+                    {% for mp in mp_list %}
+                        <div class="am-u-sm-{{  12|intdiv:c }}  widget-margin-bottom-lg ">
+    {#                    {% endif %}#}
+                            <div class="tpl-user-card am-text-center widget-body-lg">
+                                <div class="tpl-user-card-title">
+                                    {{ mp.nick_name }}
+                                </div>
+                                <div class="achievement-subheading">
+                                    {{ mp.principal_name }}
+                                </div>
+                                <img class="achievement-image" style="width:217px;height:217px" src="{{ mp.head_img }}" alt="">
+                                <div class="achievement-description">
+                                    <strong>使用平台：
+                                        {% if mp.platform == 0 %}
+                                            天猫
+                                            {% elif mp.platform == 1 %}
+                                                淘宝
+                                            {% else %}
+                                                京东
+                                        {% endif %}
+                                    </strong>
+                                </div>
                             </div>
                         </div>
+                        {% endfor %}
+                    {% endwith %}
                     </div>
                 </div>
             </div>

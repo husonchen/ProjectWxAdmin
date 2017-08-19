@@ -2,6 +2,7 @@ from django_url_framework.controller import ActionController
 from shop_admin.model.log_change_money import LogShopMoney
 from shop_admin.util.TplHelper import *
 from shop_admin.model.shop_user import *
+from shop_admin.model.mp_info import MpInfo
 from django.shortcuts import render
 
 class SettingController(ActionController):
@@ -41,4 +42,6 @@ class SettingController(ActionController):
             return HttpResponse("true")
 
     def media_platform(self,request):
-        return render(request, 'setting/media _platform.html', {})
+        user = request.session['user']
+        mps = MpInfo.objects.filter(shop_id=user.shop_id)
+        return render(request, 'setting/media _platform.html', {'mp_list':mps})

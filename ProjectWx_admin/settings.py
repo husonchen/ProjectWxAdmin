@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'kronos',
+    'mathfilters',
     'shop_admin',
 ]
 
@@ -207,3 +209,4 @@ STATICFILES_DIRS = [BASE_DIR+'/static',]
 CONTROLLER = 'shop_admin.controller'
 
 nsqd = '127.0.0.1:4151'
+
