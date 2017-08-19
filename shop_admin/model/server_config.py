@@ -11,7 +11,7 @@ class ServerConfig(models.Model):
     v = models.CharField(max_length=255)
 
 def getSetting(namespace,key):
-    mc_key = namespace + '_' + key + '_'
+    mc_key = namespace + '_' + key
     value = cache.get(mc_key)
     if type(value) == type(None):
         try:
@@ -23,6 +23,6 @@ def getSetting(namespace,key):
     return value
 
 def saveSetting(namespace,key,value):
-    mc_key = namespace + '_' + key + '_'
+    mc_key = namespace + '_' + key
     cache.set(mc_key, value)
     obj, created = ServerConfig.objects.update_or_create(namespace=namespace, k=key,v=value)
