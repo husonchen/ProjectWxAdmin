@@ -8,7 +8,7 @@ from shop_admin.model.mp_info import MpInfo
 logger = logging.getLogger('shop_admin')
 import kronos
 
-@kronos.register('0 */2 * * *')
+@kronos.register('0 * * * *')
 class Command(BaseCommand):
     def handle(self, *args, **options):
         qs = MpInfo.objects.all()
@@ -17,6 +17,8 @@ class Command(BaseCommand):
             authorizer_access_token,authorizer_refresh_token = flush_authorization_token(q.authorizer_appid,q.authorizer_refresh_token)
             info = get_basic_info(q.authorizer_appid)
             # print info
+            if 'head_img' not in info:
+                info['head_img'] = '/assets/img/default_head.jpeg'
             MpInfo.objects.filter(authorizer_appid=q.authorizer_appid).update(
                 authorizer_access_token=authorizer_access_token,
                 authorizer_refresh_token=authorizer_refresh_token,

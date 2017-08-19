@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand, CommandError
 logger = logging.getLogger('shop_admin')
 import kronos
 
-@kronos.register('0 */2 * * *')
+@kronos.register('0 * * * *')
 class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write('start flush')
