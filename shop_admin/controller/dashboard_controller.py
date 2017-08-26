@@ -5,6 +5,7 @@ from django.http import  HttpResponseRedirect
 from django.shortcuts import render
 from shop_admin.model.order_ids import OrderIds
 from shop_admin.model.shop_setting import ShopSetting
+from shop_admin.model.mp_info import MpInfo
 
 class DashboardController(ActionController):
 
@@ -24,7 +25,25 @@ class DashboardController(ActionController):
         except IndexError:
             shopSetting = ShopSetting(shop_id=user.shop_id,update_time=None)
             shopSetting.save()
-        c = {"userName":user.shop_name,'last_time':last_time,'last_num':num,'shop_setting':shopSetting}
+
+        c = {"user": user, 'last_time': last_time, 'last_num': num, 'shop_setting': shopSetting}
+        try:
+            mplist = list(MpInfo.objects.filter(shop_id=user.shop_id,del_flag=False).order_by('id').all())
+            if 'current_mp_id' not in request.session:
+                mp = mplist[0]
+                request.session['current_mp_id'] = mp.id
+                mplist.remove(mp)
+            else:
+                current_mp_id = request.session['current_mp_id']
+                for mp in mplist:
+                    if mp.id == current_mp_id:
+                        break
+                mplist.remove(mp)
+            c['current_mp'] = mp
+            c['mplist'] = mplist
+        except :
+            pass
+
         # return getTpl(c,'dashboard/index')
         return render(request, 'dashboard/index.html', c)
 

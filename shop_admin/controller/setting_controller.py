@@ -43,5 +43,5 @@ class SettingController(ActionController):
 
     def media_platform(self,request):
         user = request.session['user']
-        mps = MpInfo.objects.filter(shop_id=user.shop_id)
+        mps = MpInfo.objects.filter(shop_id=user.shop_id,del_flag=False)
         return render(request, 'setting/media _platform.html', {'mp_list':mps})

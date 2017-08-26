@@ -44,22 +44,30 @@
                     <ul>
                         <!-- 欢迎语 -->
                         <li class="am-text-sm tpl-header-navbar-welcome">
-                            <a href="javascript:;">欢迎你, <span>{{ userName }}</span> </a>
+                            <a href="javascript:;">欢迎你, <span>{{ user.shop_name }}</span> </a>
                         </li>
 <!-- 新邮件 -->
                         <li class="am-dropdown tpl-dropdown" data-am-dropdown>
-                            {% if userName == "测试商户" %}
+                            {% if user.pay == 2 %}
                             <a href="javascript:;" class="am-dropdown-toggle tpl-dropdown-toggle" data-am-dropdown-toggle>
-                                <i class="am-icon-envelope">切换公众号</i>
+                                <i class="am-icon-envelope">
+                                    {% if current_mp %}
+                                        {{ current_mp.nick_name }}
+                                        {% else %}
+                                        无公众号
+                                    {% endif %}
+                                    </i>
                                 <span class="am-badge am-badge-success am-round item-feed-badge"></span>
                             </a>
                             {% endif %}
+                            {% if mplist %}
                             <!-- 弹出列表 -->
                             <ul class="am-dropdown-content tpl-dropdown-content">
+                                {% for mp in mplist %}
                                 <li class="tpl-dropdown-menu-messages">
                                     <a href="javascript:;" class="tpl-dropdown-menu-messages-item am-cf">
                                         <div class="menu-messages-ico">
-                                            <img src="assets/img/user04.png" alt="">
+                                            <img src="{{ mp.head_img }}" alt="">
                                         </div>
                                         <div class="menu-messages-time">
 
@@ -67,15 +75,17 @@
                                         <div class="menu-messages-content">
                                             <div class="menu-messages-content-title">
                                                 <i class="am-icon-circle-o am-text-success"></i>
-                                                <span>迅惠通</span>
+                                                <span>{{ mp.nick_name }}</span>
                                             </div>
                                             <div class="am-text-truncate">  </div>
                                             <div class="menu-messages-content-time"></div>
                                         </div>
                                     </a>
                                 </li>
+                                {% endfor %}
 
                             </ul>
+                        {% endif %}
                         </li>
 
                         <!-- 退出 -->
@@ -165,7 +175,7 @@
                     </a>
 
                     <ul class="sidebar-nav sidebar-nav-sub">
-                        {% if userName == "测试商户" %}
+                        {% if user.pay == 2 %}
                         <li class="sidebar-nav-link">
                             <a href="javascript:;" id="mediaPlatformBtn">
                                 <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 公众号

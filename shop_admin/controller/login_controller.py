@@ -31,6 +31,7 @@ class LoginController(ActionController):
 
         seting = ShopSetting.objects.get(shop_id=user.shop_id)
         user.shop_name = seting.name
+        user.pay = seting.pay
         request.session['user'] = user
         return HttpResponse("true")
 

@@ -18,3 +18,4 @@ class MpInfo(models.Model):
     qrcode_url = models.CharField(max_length=255)
     shop_id = models.IntegerField(default=0)
     platform = models.IntegerField(default=0)
+    del_flag = models.BooleanField(default=0)

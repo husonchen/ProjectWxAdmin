@@ -9,3 +9,4 @@ class ShopSetting(models.Model):
     update_time = models.DateTimeField()
     filter_orderid_flag = models.BooleanField(default=False)
     auto_pass_flag = models.BooleanField(default=False)
+    pay = models.IntegerField()

@@ -26,6 +26,10 @@ class WxController(ActionController):
             ComponentVerifyTicket = xml.find('ComponentVerifyTicket').text
             logger.info(ComponentVerifyTicket)
             saveSetting('admin','component_verify_ticket',ComponentVerifyTicket)
+        elif infotype == 'unauthorized':
+            AuthorizerAppid = xml.find('AuthorizerAppid').text
+            logger('unauthorized: %s' % AuthorizerAppid)
+            MpInfo.objects.filter(authorizer_appid=AuthorizerAppid).update(del_flag=True)
         return 'success'
 
     def add_mp(self,request):
@@ -34,6 +38,8 @@ class WxController(ActionController):
         pre_auth_code = get_pre_auth_code()
         return wx_auth_page(pre_auth_code,'http://admin.51dingxiao.com/wx/open/shops/%s/%s/' %
                             (type,str(user.shop_id).zfill(5)))
+
+
 
 # @csrf_exempt
 def redirct_from_wx(request,type,shop_id):
@@ -50,6 +56,7 @@ def redirct_from_wx(request,type,shop_id):
                                     authorization_code=authorization_code,
                                     authorizer_access_token=authorizer_access_token,
                                     authorizer_refresh_token=authorizer_refresh_token,
+                                    del_flag=False,
                                     defaults={'authorizer_appid':authorizer_appid})
 
     info = get_basic_info(authorizer_appid)
