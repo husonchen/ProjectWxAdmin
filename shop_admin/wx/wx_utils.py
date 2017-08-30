@@ -1,6 +1,7 @@
 from shop_admin.wx.WXBizMsgCrypt import WXBizMsgCrypt
-from shop_admin.model.server_config import getSetting
+from shop_admin.model.server_config import getSetting,ServerConfig
 from ProjectWx_admin.settings import TOKEN
+from shop_admin.model.mp_info import MpInfo
 import urllib3
 import warnings
 warnings.filterwarnings("ignore")
@@ -105,3 +106,12 @@ def get_basic_info(auth_appid_value):
         logger.error('get_basic_info return : %s' % s.data)
     res = res['authorizer_info']
     return res
+
+def createTag(name,id):
+    accessToken = MpInfo.objects.filter(id=id).all()[0].authorizer_access_token
+    target = r'https://api.weixin.qq.com/cgi-bin/tags/create?access_token=%s' %accessToken
+    data = {'tag':{'name':name}}
+    payload = json.dumps(data)
+    s = http.request('POST',target,body=payload)
+    res = json.loads(s.data)
+    return res['tag']['id']
