@@ -10,7 +10,7 @@ import kronos
 @kronos.register('0 * * * *')
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        client = mc.Client('127.0.0.1:11211')
+        client = mc.Client(['127.0.0.1:11211'])
         self.stdout.write('start flush')
         appId = getSetting('admin','app_id')
         appSecret = getSetting('admin','app_secret')
