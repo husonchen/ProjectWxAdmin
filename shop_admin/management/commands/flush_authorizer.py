@@ -14,20 +14,24 @@ class Command(BaseCommand):
         qs = MpInfo.objects.all()
         # print qs
         for q in qs:
-            authorizer_access_token,authorizer_refresh_token = flush_authorization_token(q.authorizer_appid,q.authorizer_refresh_token)
-            info = get_basic_info(q.authorizer_appid)
-            # print info
-            if 'head_img' not in info:
-                info['head_img'] = '/assets/img/default_head.jpeg'
-            MpInfo.objects.filter(authorizer_appid=q.authorizer_appid).update(
-                authorizer_access_token=authorizer_access_token,
-                authorizer_refresh_token=authorizer_refresh_token,
+            try:
+                authorizer_access_token,authorizer_refresh_token = flush_authorization_token(q.authorizer_appid,q.authorizer_refresh_token)
+                info = get_basic_info(q.authorizer_appid)
+                # print info
+                if 'head_img' not in info:
+                    info['head_img'] = '/assets/img/default_head.jpeg'
+                MpInfo.objects.filter(authorizer_appid=q.authorizer_appid).update(
+                    authorizer_access_token=authorizer_access_token,
+                    authorizer_refresh_token=authorizer_refresh_token,
 
-                nick_name = info['nick_name'],
-                head_img = info['head_img'],
-                service_type_info = info['service_type_info']['id'],
-                verify_type_info = info['verify_type_info']['id'],
-                user_name = info['user_name'],
-                principal_name = info['principal_name'],
-                qrcode_url = info['qrcode_url'],
-            )
+                    nick_name = info['nick_name'],
+                    head_img = info['head_img'],
+                    service_type_info = info['service_type_info']['id'],
+                    verify_type_info = info['verify_type_info']['id'],
+                    user_name = info['user_name'],
+                    principal_name = info['principal_name'],
+                    qrcode_url = info['qrcode_url'],
+                )
+                
+            except:
+                continue
