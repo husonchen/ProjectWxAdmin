@@ -3,12 +3,14 @@ import urllib
 import json
 import logging
 from django.core.management.base import BaseCommand, CommandError
+import pylibmc as mc
 logger = logging.getLogger('shop_admin')
 import kronos
 
 @kronos.register('0 * * * *')
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        client = mc.Client('127.0.0.1:11211')
         self.stdout.write('start flush')
         appId = getSetting('admin','app_id')
         appSecret = getSetting('admin','app_secret')
@@ -27,3 +29,4 @@ class Command(BaseCommand):
             print resp
         accessToken = urlResp['component_access_token']
         saveSetting('admin','component_access_token',accessToken)
+        client.delete('xunhui__admin_config_admin_component_access_token')
