@@ -8,10 +8,12 @@ from shop_admin.model.mp_info import MpInfo
 logger = logging.getLogger('shop_admin')
 import kronos
 from django.core.cache import cache
+import pylibmc as mc
 
 @kronos.register('0 * * * *')
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        client = mc.Client('127.0.0.1:11211')
         qs = MpInfo.objects.all()
         # print qs
         for q in qs:
@@ -33,8 +35,9 @@ class Command(BaseCommand):
                     principal_name = info['principal_name'],
                     qrcode_url = info['qrcode_url'],
                 )
+
                 mpinfo = MpInfo.objects.filter(authorizer_appid=q.authorizer_appid).all()[0]
-                cache.delete('_mp_info_id_'+mpinfo.id)
-                cache.delete('_mp_info_appid_'+q.authorizer_appid)
+                client.delete('xunhui__mp_info_id_'+mpinfo.id)
+                client.delete('xunhui__mp_info_appid_'+q.authorizer_appid)
             except:
                 continue
