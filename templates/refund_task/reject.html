@@ -7,6 +7,15 @@
 
 
                             </div>
+                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                                <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                    <input type="text" class="am-form-field " id="searchText">
+                                    <span class="am-input-group-btn">
+                                    <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button" id="searchBtn"></button>
+                                    </span>
+                                </div>
+                            </div>
+
                              <div class="widget-body  am-fr">
                                  <div class="am-u-sm-12">
                                     <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
@@ -56,14 +65,18 @@
 
 
 <script>
-
+     $('#pageList').on( "click", ".pageBtn", function() {
+        console.log(this.id);
+        $('.pageBtn').removeClass('am-active');
+        $(this).addClass('am-active');
+        flushData();
+    });
     $(".pageBtn").click(function () {
         var page = $(this).children()[0].text;
         console.log(page);
-
         $.ajax({
             type: "get",
-            url:"/refund_task/reject_table/",
+            url:"/refund_task/reject/",
             data:{page:page},
             async: false,
             error: function(request) {
@@ -76,14 +89,59 @@
         $('.pageBtn').removeClass('am-active');
         $(this).addClass('am-active');
     });
+        $("#searchBtn").click(function () {
+        resetPage();
+        flushData();
+    });
+    function flushData() {
+        var page = 1;
+        if($(".searchBtn.am-active").length != 0)
+            page = $(".searchBtn.am-active").children()[0].text;
+        console.log('currentPage:'+page);
+        var type = $("#typeSelect").val();
+        console.log('refundType:'+type);
+        var searchText = $("#searchText").val();
+        console.log('searchText:'+searchText);
+        $.ajax({
+            type: "get",
+            url:"/refund_task/reject_table/",
+            data:{page:page,search:searchText,type:type},
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                $('#tableBody').html(data);
+                var pageNum = $('#totalNumDiv').attr('totalPage');
+                console.log(pageNum);
+                initPage(page,pageNum);
+            }
+        });
+    }
 
+    function resetPage() {
+        $('#tableBody').html("");
+        $('#pageList').html("");
+    }
+
+    function initPage(currentPage,totalPage) {
+        currentPage = parseInt(currentPage);
+        totalPage = parseInt(totalPage);
+        var startPage = currentPage - 5 >= 1?currentPage-5:1;
+        console.log('startPage:'+startPage);
+        var endPage = currentPage + 5 <= totalPage? currentPage+5:totalPage;
+        console.log('endPage:'+endPage);
+        text = '';
+        for(var i = startPage ; i <= endPage ; ){
+            if(i == currentPage){
+                text += "<li id=\"page"+i+"\" class=\"pageBtn am-active\"><a href=\"#\">"+i+"</a></li>";
+            }else {
+                text += "<li id=\"page" + i + "\" class=\"pageBtn\"><a href=\"#\">" + i + "</a></li>";
+            }
+            i ++;
+        }
+        console.log(text);
+        $('#pageList').html( text);
+    }
 
 </script>
-
-
-
-
-
-
-
-
