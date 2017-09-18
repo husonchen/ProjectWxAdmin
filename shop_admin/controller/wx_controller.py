@@ -52,12 +52,15 @@ def redirct_from_wx(request,type,shop_id):
     #                                 defaults={'authorization_code':authorization_code})
 
     authorizer_appid,authorizer_access_token,authorizer_refresh_token=get_authorizer_access_token(authorization_code)
-    MpInfo.objects.update_or_create(shop_id=shop_id,platform=type,
-                                    authorization_code=authorization_code,
-                                    authorizer_access_token=authorizer_access_token,
-                                    authorizer_refresh_token=authorizer_refresh_token,
-                                    del_flag=False,
-                                    defaults={'authorizer_appid':authorizer_appid})
+    MpInfo.objects.update_or_create(
+                                    authorizer_appid=authorizer_appid,
+                                    defaults={
+                                        'shop_id':shop_id,'platform':type,
+                                        'authorization_code':authorization_code,
+                                        'authorizer_access_token':authorizer_access_token,
+                                        'authorizer_refresh_token':authorizer_refresh_token,
+                                        'del_flag':False,
+                                    })
 
     info = get_basic_info(authorizer_appid)
     if 'head_img' not in info:
