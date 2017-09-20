@@ -19,7 +19,7 @@ class WxController(ActionController):
 
         decrypt_xml = get_decrypt_xml(data,msg_signature,timestamp,nonce)
         xml = ET.fromstring(decrypt_xml)
-        appid = xml.find('AppId').text
+        appid = xml.find('AppId').text  
         create_time = xml.find('CreateTime').text
         infotype = xml.find('InfoType').text
         if infotype == 'component_verify_ticket':
@@ -39,7 +39,24 @@ class WxController(ActionController):
         return wx_auth_page(pre_auth_code,'http://admin.51dingxiao.com/wx/open/shops/%s/%s/' %
                             (type,str(user.shop_id).zfill(5)))
 
-
+@csrf_exempt
+def auto_test(request,appId):  
+    data = request.body
+    if appId != 'wx570bc396a51b8ff8':
+        return 'success'
+    if len(data) == 0:
+        return 'hello, this is handle view'
+    else:
+        xml = ET.fromstring(data)
+        msgType = xml.find('MsgType').text
+        reply = None
+        if msgType == 'event':
+	   Event = xml.find('Event').text
+	   return event + 'from_callback'
+	elif msgType == 'text':
+	   messageContent = xml.find('Content').text
+           return messageContent + '_callback'
+        return 'success'
 
 # @csrf_exempt
 def redirct_from_wx(request,type,shop_id):
