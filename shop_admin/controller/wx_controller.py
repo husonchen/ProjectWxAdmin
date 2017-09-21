@@ -1,11 +1,16 @@
 from django_url_framework.controller import ActionController
 import xml.etree.ElementTree as ET
 from shop_admin.wx.wx_utils import *
+import json
 import logging
 from shop_admin.model.mp_info import MpInfo
 from django.views.decorators.csrf import csrf_exempt
 from shop_admin.model.server_config import saveSetting
+from shop_admin.nsq_producer.send_message_touser import MessageToUser
+from django.http.response import HttpResponse
 logger = logging.getLogger('shop_admin')
+
+message_touser = MessageToUser()
 
 class WxController(ActionController):
     @csrf_exempt
@@ -23,12 +28,14 @@ class WxController(ActionController):
         create_time = xml.find('CreateTime').text
         infotype = xml.find('InfoType').text
         if infotype == 'component_verify_ticket':
+            if appid == 'wx570bc396a51b8ff8':
+                return 'success'
             ComponentVerifyTicket = xml.find('ComponentVerifyTicket').text
             logger.info(ComponentVerifyTicket)
             saveSetting('admin','component_verify_ticket',ComponentVerifyTicket)
         elif infotype == 'unauthorized':
             AuthorizerAppid = xml.find('AuthorizerAppid').text
-            logger('unauthorized: %s' % AuthorizerAppid)
+            logger.info('unauthorized: %s' % AuthorizerAppid)
             MpInfo.objects.filter(authorizer_appid=AuthorizerAppid).update(del_flag=True)
         return 'success'
 
@@ -40,23 +47,60 @@ class WxController(ActionController):
                             (type,str(user.shop_id).zfill(5)))
 
 @csrf_exempt
-def auto_test(request,appId):  
+def auto_test(request,appid):  
+    if appid != 'wx570bc396a51b8ff8':
+        return HttpResponse('')
+    timestamp = request.GET['timestamp']
+    nonce = request.GET['nonce']
+    # encrypt_type = request.GET['encrypt_type']
+    msg_signature = request.GET['msg_signature']
     data = request.body
-    if appId != 'wx570bc396a51b8ff8':
-        return 'success'
+    decrypt_xml = get_decrypt_xml(data,msg_signature,timestamp,nonce)
+    xml = ET.fromstring(decrypt_xml)
+    print decrypt_xml
     if len(data) == 0:
-        return 'hello, this is handle view'
+        return HttpResponse('hello, this is handle view')
     else:
-        xml = ET.fromstring(data)
         msgType = xml.find('MsgType').text
         reply = None
+        toUserName = xml.find('ToUserName').text
+        fromUserName = xml.find('FromUserName').text
+        createTime = xml.find('CreateTime').text
         if msgType == 'event':
-	   Event = xml.find('Event').text
-	   return event + 'from_callback'
+	   event = xml.find('Event').text
+           content = event + 'from_callback'
 	elif msgType == 'text':
 	   messageContent = xml.find('Content').text
-           return messageContent + '_callback'
-        return 'success'
+           if 'QUERY_AUTH_CODE' not in messageContent:
+               content = messageContent + '_callback'
+           else :
+               query_auth_code = messageContent[16:]
+               access_token = get_authorizer_access_token(query_auth_code)
+               print access_token
+               content = query_auth_code + '_from_api'
+               message_touser.pub_message({'access_token':access_token,'content':content,'touser':toUserName  })
+               #return HttpResponse('') 
+        replyWx = '''
+                    <xml>
+                      <ToUserName><![CDATA[%s]]></ToUserName>
+                      <FromUserName><![CDATA[%s]]></FromUserName>
+                      <CreateTime>%s</CreateTime>
+                      <MsgType><![CDATA[%s]]></MsgType>
+                      <Content><![CDATA[%s]]></Content>
+                    </xml>
+                   '''%(
+                        fromUserName,
+                        toUserName,
+                        createTime,
+                        'text',
+                        content
+                        )                             
+        print replyWx
+	encrypt_xml = get_encrypt_xml(replyWx,'123476531')
+        print encrypt_xml
+        return HttpResponse(encrypt_xml)
+
+    
 
 # @csrf_exempt
 def redirct_from_wx(request,type,shop_id):

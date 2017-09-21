@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 import shop_admin.controller.index
 from shop_admin.controller.wx_controller import redirct_from_wx
+from shop_admin.controller.wx_controller import auto_test
 
 site = Site()
 site.autodiscover()
@@ -27,7 +28,8 @@ site.autodiscover()
 urlpatterns = [
     url(r'^$',shop_admin.controller.index.hello),
     url(r'^', include(site.urls)),
-    url(r'^wx/open/shops/([0-9]{1})/([0-9]{5})/$',redirct_from_wx)
+    url(r'^wx/open/shops/([0-9]{1})/([0-9]{5})/$',redirct_from_wx),
+    url(r'^wx/(?P<appid>.*)/callback/$',auto_test)
 ] #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
